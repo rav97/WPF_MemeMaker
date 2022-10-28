@@ -1,0 +1,12 @@
+C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MvvmLib\obj\Debug\MvvmLib.csprojAssemblyReference.cache
+C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MvvmLib\obj\Debug\MvvmLib.csproj.CoreCompileInputs.cache
+C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MvvmLib\bin\Debug\MvvmLib.dll
+C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MvvmLib\bin\Debug\MvvmLib.pdb
+C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MvvmLib\bin\Debug\MaterialDesignColors.dll
+C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MvvmLib\bin\Debug\MaterialDesignThemes.Wpf.dll
+C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MvvmLib\bin\Debug\MaterialDesignColors.pdb
+C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MvvmLib\bin\Debug\MaterialDesignThemes.Wpf.pdb
+C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MvvmLib\bin\Debug\MaterialDesignThemes.Wpf.xml
+C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MvvmLib\obj\Debug\MvvmLib.csproj.CopyComplete
+C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MvvmLib\obj\Debug\MvvmLib.dll
+C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MvvmLib\obj\Debug\MvvmLib.pdb
