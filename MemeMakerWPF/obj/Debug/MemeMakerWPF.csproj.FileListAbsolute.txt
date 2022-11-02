@@ -25,3 +25,6 @@ C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MemeMakerWPF\obj\Debug\Utility\Con
 C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MemeMakerWPF\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MemeMakerWPF\obj\Debug\View\MainWindow.g.cs
 C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MemeMakerWPF\obj\Debug\View\MainWindow.baml
+C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MemeMakerWPF\bin\Debug\Microsoft.Xaml.Behaviors.dll
+C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MemeMakerWPF\bin\Debug\Microsoft.Xaml.Behaviors.pdb
+C:\Users\r.isbrandt\source\repos\MemeMakerWPF\MemeMakerWPF\bin\Debug\Microsoft.Xaml.Behaviors.xml

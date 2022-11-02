@@ -32,39 +32,51 @@
                     <ItemsControl ItemsSource="{Binding CaptionTexts}">
                         <ItemsControl.Resources>
                             <DataTemplate DataType="{x:Type vm:CaptionTextBoxViewModel}">
+
                                 <TextBox Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                                     Text="{Binding CaptionText, UpdateSourceTrigger=PropertyChanged}" material:HintAssist.Hint="{Binding CaptionNumber}"
-                                     Margin="5"/>
+                                         Text="{Binding CaptionText, UpdateSourceTrigger=PropertyChanged}" material:HintAssist.Hint="{Binding CaptionNumber}"
+                                         Margin="5"/>
+
                             </DataTemplate>
                         </ItemsControl.Resources>
                     </ItemsControl>
                 </ScrollViewer>
 
-                <Canvas Grid.Column="2">
+                <Canvas Grid.Column="2" x:Name="mainCanvas">
+
                     <Button Content="Dodaj" Command="{Binding AddCaption}"/>
 
                     <ItemsControl ItemsSource="{Binding CaptionTexts}">
-                        <ItemsControl.Resources>
-                            <DataTemplate DataType="{x:Type vm:CaptionTextBoxViewModel}">
-                                <ContentControl Template="{StaticResource DesignerItemTemplate}"
-                                                Width="90" Height="90"
-                                                Canvas.Left="400" Canvas.Top="420">
-                                    <TextBlock Text="{Binding CaptionText, UpdateSourceTrigger=PropertyChanged}"/>
-                                </ContentControl>
-                            </DataTemplate>
-                        </ItemsControl.Resources>
+
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <Canvas Width="300" Height="300"/>
+                                <Canvas x:Name="childCanvas"/>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:CaptionTextBoxViewModel}">
+
+                                <ContentControl Template="{StaticResource DesignerItemTemplate}"
+                                                Width="90" Height="90">
+
+                                    <TextBlock Text="{Binding CaptionText, UpdateSourceTrigger=PropertyChanged}" 
+                                               TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
+
+                                </ContentControl>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
                         <ItemsControl.ItemContainerStyle>
-                            <Style>
-                                <Setter Property="Canvas.Left" Value="{Binding LeftPos}"/>
+                            <Style TargetType="{x:Type ContentPresenter}">
                                 <Setter Property="Canvas.Top" Value="{Binding TopPos}"/>
+                                <Setter Property="Canvas.Left" Value="{Binding LeftPos}"/>
                             </Style>
                         </ItemsControl.ItemContainerStyle>
+
                     </ItemsControl>
+                    
                 </Canvas>
 
             </Grid>

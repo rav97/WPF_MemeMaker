@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MemeMakerWPF.ViewModel
 {
@@ -14,15 +15,15 @@ namespace MemeMakerWPF.ViewModel
         private string captionText;
         private string captionNumber;
 
-        private int leftPos, topPos, baseCanvasWidth, baseCanvasHeight;
+        private int leftPos, topPos;
 
         #endregion
 
-        public CaptionTextBoxViewModel(int number)
+        public CaptionTextBoxViewModel(int number, int initTop, int initLeft)
         {
             CaptionNumber = $"Text {number}";
-            LeftPos = new Random().Next(1, 300);
-            TopPos = new Random().Next(1, 350);
+            LeftPos = initLeft;
+            TopPos = initTop;
         }
 
 
@@ -68,26 +69,6 @@ namespace MemeMakerWPF.ViewModel
             set
             {
                 topPos = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public int BaseCanvasWidth
-        {
-            get => baseCanvasWidth;
-            set
-            {
-                baseCanvasWidth = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public int BaseCanvasHeight
-        {
-            get => baseCanvasHeight;
-            set
-            {
-                baseCanvasHeight = value;
                 RaisePropertyChanged();
             }
         }

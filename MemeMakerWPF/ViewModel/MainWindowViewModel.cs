@@ -13,7 +13,7 @@ namespace MemeMakerWPF.ViewModel
     {
         #region [ VARIABLES ]
 
-        private int captionCount = 1;
+        private int captionCount = 1, top=0, left=0;
 
         #endregion
 
@@ -22,15 +22,13 @@ namespace MemeMakerWPF.ViewModel
             CaptionTexts = new ObservableCollection<CaptionTextBoxViewModel>();
         }
 
-
-
         #region [ COMMANDS ]
 
         public ICommand AddCaption
         {
             get => RelayCommand.Command(() =>
             {
-                CaptionTexts.Add(new CaptionTextBoxViewModel(captionCount));
+                CaptionTexts.Add(new CaptionTextBoxViewModel(captionCount, top+=50, left+=50));
                 captionCount++;
             });
         }
