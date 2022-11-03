@@ -14,6 +14,7 @@ namespace MemeMakerWPF.ViewModel
 
         private string captionText;
         private string captionNumber;
+        private int fontSize = 20;
 
         private int leftPos, topPos;
 
@@ -28,6 +29,24 @@ namespace MemeMakerWPF.ViewModel
 
 
         #region [ COMMANDS ]
+
+        public ICommand FontSizeUp
+        {
+            get => RelayCommand.Command(() =>
+            {
+                if (FontSize < 120)
+                    FontSize += 2;
+            });
+        }
+
+        public ICommand FontSizeDown
+        {
+            get => RelayCommand.Command(() =>
+            {
+                if (FontSize > 8)
+                    FontSize -= 2;
+            });
+        }
 
         #endregion
 
@@ -69,6 +88,16 @@ namespace MemeMakerWPF.ViewModel
             set
             {
                 topPos = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public int FontSize
+        {
+            get => fontSize;
+            set
+            {
+                fontSize = value;
                 RaisePropertyChanged();
             }
         }

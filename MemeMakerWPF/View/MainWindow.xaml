@@ -8,7 +8,7 @@
         xmlns:c="clr-namespace:MemeMakerWPF.Utility.Controls"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:vm="clr-namespace:MemeMakerWPF.ViewModel"
-        mc:Ignorable="d" x:Name="window"
+        mc:Ignorable="d" x:Name="window" 
         Style="{StaticResource FullWindow}"
         Title="WPF Meme Maker" Height="450" Width="800">
 
@@ -21,30 +21,108 @@
 
             <c:WindowBeam Header="{Binding ElementName=window, Path=Title}"/>
 
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1" Margin="10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
+                    <ColumnDefinition MinWidth="130" MaxWidth="260"/>
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
 
-                <ScrollViewer>
-                    <ItemsControl ItemsSource="{Binding CaptionTexts}">
-                        <ItemsControl.Resources>
-                            <DataTemplate DataType="{x:Type vm:CaptionTextBoxViewModel}">
+                <Grid Grid.Column="0">
 
-                                <TextBox Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                                         Text="{Binding CaptionText, UpdateSourceTrigger=PropertyChanged}" material:HintAssist.Hint="{Binding CaptionNumber}"
-                                         Margin="5"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
 
-                            </DataTemplate>
-                        </ItemsControl.Resources>
-                    </ItemsControl>
-                </ScrollViewer>
+                    <WrapPanel Grid.Row="0" Orientation="Horizontal">
+
+                        <Button ToolTip="Add Background Image" Width="120"
+                                Command="{Binding SetBackground}" Padding="0">
+                            <StackPanel Orientation="Horizontal">
+                                <material:PackIcon Kind="ImageAdd" VerticalAlignment="Center"/>
+                                <Separator Margin="2"/>
+                                <TextBlock Text="Add image" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button ToolTip="Add caption" Width="120"
+                                Command="{Binding AddCaption}" Padding="0">
+                            <StackPanel Orientation="Horizontal">
+                                <material:PackIcon Kind="FormatAnnotationAdd" VerticalAlignment="Center"/>
+                                <Separator Margin="2"/>
+                                <TextBlock Text="Add text" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                    </WrapPanel>
+
+
+                    <ScrollViewer Grid.Row="2">
+                        <ItemsControl ItemsSource="{Binding CaptionTexts}">
+                            <ItemsControl.Resources>
+                                <DataTemplate DataType="{x:Type vm:CaptionTextBoxViewModel}">
+
+                                    <Border Padding="0 3 0 3" BorderBrush="LightGray" BorderThickness="0 0 0 1">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="4*"/>
+                                                <ColumnDefinition MinWidth="35" MaxWidth="70"/>
+                                                <ColumnDefinition Width="35"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBox Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                                                 Text="{Binding CaptionText, UpdateSourceTrigger=PropertyChanged}" 
+                                                 material:HintAssist.Hint="{Binding CaptionNumber, FallbackValue=Caption}"
+                                                 Margin="5" AcceptsReturn="True"/>
+
+                                            <WrapPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                                                    Padding="0" Width="25" Height="25" Command="{Binding FontSizeUp}"
+                                                    ToolTip="Increase font size" Margin="3">
+                                                    <material:PackIcon Kind="FormatFontSizeIncrease"/>
+                                                </Button>
+
+                                                <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                                                    Padding="0" Width="25" Height="25" Command="{Binding FontSizeDown}"
+                                                    ToolTip="Decrease font size" Margin="3">
+                                                    <material:PackIcon Kind="FormatFontSizeDecrease"/>
+                                                </Button>
+
+                                            </WrapPanel>
+
+                                            <Button Grid.Column="2" Style="{StaticResource RedButton}" Padding="0"
+                                                Width="25" Height="25" Command="{Binding ElementName=window, Path=DataContext.RemoveCaption}" CommandParameter="{Binding .}"
+                                                ToolTip="Remove caption" Margin="3">
+                                                <material:PackIcon Kind="Remove"/>
+                                            </Button>
+
+                                        </Grid>
+                                    </Border>
+
+                                </DataTemplate>
+                            </ItemsControl.Resources>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <Button Grid.Row="4" ToolTip="Generate meme">
+                        <StackPanel Orientation="Horizontal">
+                            <material:PackIcon Kind="ContentSave" VerticalAlignment="Center"/>
+                            <Separator Margin="2"/>
+                            <TextBlock Text="Generate Meme" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                </Grid>
 
                 <Canvas Grid.Column="2" x:Name="mainCanvas">
 
-                    <Button Content="Dodaj" Command="{Binding AddCaption}"/>
+                    <Canvas.Background>
+                        <ImageBrush ImageSource="{Binding Background}" Stretch="Uniform"/>
+                    </Canvas.Background>
 
                     <ItemsControl ItemsSource="{Binding CaptionTexts}">
 
@@ -60,8 +138,46 @@
                                 <ContentControl Template="{StaticResource DesignerItemTemplate}"
                                                 Width="90" Height="90">
 
-                                    <TextBlock Text="{Binding CaptionText, UpdateSourceTrigger=PropertyChanged}" 
-                                               TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
+                                    <Border>
+                                        <Border>
+                                            <Border>
+
+                                                <TextBlock Text="{Binding CaptionText, UpdateSourceTrigger=PropertyChanged}" 
+                                                           TextWrapping="WrapWithOverflow" TextAlignment="Center"
+                                                           FontSize="{Binding FontSize,FallbackValue=30}" FontFamily="Impact" Foreground="White">
+                                                    <TextBlock.Effect>
+                                                        <DropShadowEffect RenderingBias="Performance" 
+                                                                          Direction="0"
+                                                                          BlurRadius="0" 
+                                                                          ShadowDepth="1.5"/>
+                                                    </TextBlock.Effect>
+
+                                                </TextBlock>
+
+                                                <Border.Effect>
+                                                    <DropShadowEffect RenderingBias="Performance" 
+                                                                      Direction="90"
+                                                                      BlurRadius="0" 
+                                                                      ShadowDepth="1.5"/>
+                                                </Border.Effect>
+
+                                            </Border>
+                                            <Border.Effect>
+                                                <DropShadowEffect RenderingBias="Performance" 
+                                                                  Direction="180"
+                                                                  BlurRadius="0" 
+                                                                  ShadowDepth="1.5"/>
+                                            </Border.Effect>
+
+                                        </Border>
+                                        <Border.Effect>
+                                            <DropShadowEffect RenderingBias="Performance" 
+                                                              Direction="270"
+                                                              BlurRadius="0" 
+                                                              ShadowDepth="1.5"/>
+                                        </Border.Effect>
+
+                                    </Border>
 
                                 </ContentControl>
 
@@ -76,7 +192,7 @@
                         </ItemsControl.ItemContainerStyle>
 
                     </ItemsControl>
-                    
+
                 </Canvas>
 
             </Grid>
