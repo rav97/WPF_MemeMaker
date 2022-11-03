@@ -6,11 +6,22 @@
         xmlns:local="clr-namespace:MemeMakerWPF.View"
         xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:c="clr-namespace:MemeMakerWPF.Utility.Controls"
+        xmlns:convert="clr-namespace:MemeMakerWPF.Utility.Converters"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:vm="clr-namespace:MemeMakerWPF.ViewModel"
         mc:Ignorable="d" x:Name="window" 
         Style="{StaticResource FullWindow}"
         Title="WPF Meme Maker" Height="450" Width="800">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding OnLoad}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Window.Resources>
+        <convert:CanvasSizeConverter x:Key="CanvasSizeconverter"/>
+    </Window.Resources>
 
     <Grid>
         <Grid>
@@ -41,7 +52,16 @@
                     <WrapPanel Grid.Row="0" Orientation="Horizontal">
 
                         <Button ToolTip="Add Background Image" Width="120"
-                                Command="{Binding SetBackground}" Padding="0">
+                                Command="{Binding SetBackground}"
+                                Padding="0">
+
+                            <Button.CommandParameter>
+                                <MultiBinding Converter="{StaticResource CanvasSizeconverter}">
+                                    <Binding ElementName="mainCanvas" Path="ActualWidth"/>
+                                    <Binding ElementName="mainCanvas" Path="ActualHeight"/>
+                                </MultiBinding>
+                            </Button.CommandParameter>
+                            
                             <StackPanel Orientation="Horizontal">
                                 <material:PackIcon Kind="ImageAdd" VerticalAlignment="Center"/>
                                 <Separator Margin="2"/>
@@ -119,6 +139,15 @@
                 </Grid>
 
                 <Canvas Grid.Column="2" x:Name="mainCanvas">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseEnter">
+                            <i:InvokeCommandAction Command="{Binding MouseOverCanvas}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseLeave">
+                            <i:InvokeCommandAction Command="{Binding MouseLeftCanvas}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
 
                     <Canvas.Background>
                         <ImageBrush ImageSource="{Binding Background}" Stretch="Uniform"/>

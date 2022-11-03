@@ -83,7 +83,8 @@
             <ControlTemplate x:Key="DesignerItemTemplate" TargetType="ContentControl">
                 <Grid DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
                     <c:MoveThumb Template="{StaticResource MoveThumbTemplate}" Cursor="SizeAll" Panel.ZIndex="10"/>
-                    <Control Template="{StaticResource ResizeDecoratorTemplate}"/>
+                    <Control Template="{StaticResource ResizeDecoratorTemplate}" 
+                             Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.ManipulationBoxVisibility}"/>
                     <ContentPresenter Content="{TemplateBinding ContentControl.Content}"/>
                 </Grid>
             </ControlTemplate>
