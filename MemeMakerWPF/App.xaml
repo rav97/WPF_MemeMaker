@@ -15,9 +15,9 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.LightBlue.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <!-- APP RESOURCES -->
+            <!-- COLORS -->
 
-            <BitmapImage x:Key="InitialImage" UriSource="/Utility/Resources/First_image.jpg"/>
+            <SolidColorBrush x:Key="BorderColor" Color="#FF3D3D3D"/>
 
             <!-- WINDOW -->
             
@@ -70,6 +70,15 @@
                 <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}"/>
             </Style>
 
+            <!-- TEXTBOX -->
+
+            <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}">
+                <Setter Property="Foreground" Value="{StaticResource MaterialDesignPaper}"/>
+                <Setter Property="material:TextFieldAssist.UnderlineBrush" Value="{StaticResource MaterialDesignPaper}"/>
+                <Setter Property="CaretBrush" Value="{StaticResource MaterialDesignPaper}"/>
+                <Setter Property="material:HintAssist.Foreground" Value="{StaticResource MaterialDesignPaper}"/>
+            </Style>
+            
             <!-- TEXTBLOCK -->
 
             <Style x:Key="TitleTextBlock" TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignHeadline5TextBlock}">

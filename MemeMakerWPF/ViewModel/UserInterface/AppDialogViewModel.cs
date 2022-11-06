@@ -60,6 +60,24 @@ namespace MemeMakerWPF.ViewModel.UserInterface
             });
         }
 
+        public ICommand NoCommand
+        {
+            get => RelayCommand.Command(() =>
+            {
+                this.Result = MessageBoxResult.No;
+                DialogHost.CloseDialogCommand.Execute(null, null);
+            });
+        }
+
+        public ICommand OkCommand
+        {
+            get => RelayCommand.Command(() =>
+            {
+                this.Result = MessageBoxResult.OK;
+                DialogHost.CloseDialogCommand.Execute(null, null);
+            });
+        }
+
         #endregion
 
 

@@ -12,11 +12,14 @@
                 xmlns:res="clr-namespace:MemeMakerWPF.Utility.Resources"
                 mc:Ignorable="d" 
                 x:Name="window" DialogIdentifier="MainWindow"
-                Style="{StaticResource FullWindow}"
-                Title="{x:Static res:Labels.AppName}" Height="450" Width="800">
+                Style="{StaticResource FullWindow}" 
+                Background="{StaticResource MaterialDesignDarkBackground}"
+                Title="{x:Static res:Labels.AppName}" 
+                Height="500" Width="1000">
 
     <Window.Resources>
-        <convert:CanvasSizeConverter x:Key="CanvasSizeconverter"/>
+        <convert:CanvasSizeConverter x:Key="CanvasSizeConverter"/>
+        <convert:CaptionWidthConverter x:Key="WidthConverter"/>
     </Window.Resources>
 
     <i:Interaction.Triggers>
@@ -26,7 +29,7 @@
         <i:EventTrigger EventName="SizeChanged">
             <i:InvokeCommandAction Command="{Binding RefreshSizes}">
                 <i:InvokeCommandAction.CommandParameter>
-                    <MultiBinding Converter="{StaticResource CanvasSizeconverter}">
+                    <MultiBinding Converter="{StaticResource CanvasSizeConverter}">
                         <Binding ElementName="mainCanvas" Path="ActualWidth"/>
                         <Binding ElementName="mainCanvas" Path="ActualHeight"/>
                     </MultiBinding>
@@ -46,110 +49,118 @@
         <Grid x:Name="ContentPanel" Grid.Row="1">
             <Grid Margin="10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition MinWidth="130" MaxWidth="260"/>
+                    <ColumnDefinition MinWidth="220" MaxWidth="260"/>
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
 
-                <Grid Grid.Column="0">
+                <Border Grid.Column="0" BorderThickness="2" CornerRadius="10"
+                        BorderBrush="{StaticResource BorderColor}">
+                    <Grid>
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
 
-                    <WrapPanel Grid.Row="0" Orientation="Horizontal">
+                        <Grid Grid.Row="0">
 
-                        <Button ToolTip="Add Background Image" Width="120"
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+
+                            <Button Grid.Column="0" ToolTip="Add Background Image"
                                 Command="{Binding SetBackground}" Style="{StaticResource AccentButton}"
                                 Padding="0">
 
-                            <Button.CommandParameter>
-                                <MultiBinding Converter="{StaticResource CanvasSizeconverter}">
-                                    <Binding ElementName="mainCanvas" Path="ActualWidth"/>
-                                    <Binding ElementName="mainCanvas" Path="ActualHeight"/>
-                                </MultiBinding>
-                            </Button.CommandParameter>
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource CanvasSizeConverter}">
+                                        <Binding ElementName="mainCanvas" Path="ActualWidth"/>
+                                        <Binding ElementName="mainCanvas" Path="ActualHeight"/>
+                                    </MultiBinding>
+                                </Button.CommandParameter>
 
-                            <StackPanel Orientation="Horizontal">
-                                <material:PackIcon Kind="ImageAdd" VerticalAlignment="Center"/>
-                                <Separator Margin="2"/>
-                                <TextBlock Text="Add image" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
+                                <StackPanel Orientation="Horizontal">
+                                    <material:PackIcon Kind="ImageAdd" VerticalAlignment="Center"/>
+                                    <Separator Margin="2"/>
+                                    <TextBlock Text="Add image" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
 
-                        <Button ToolTip="Add caption" Width="120" Style="{StaticResource AccentButton}"
+                            <Button Grid.Column="1" ToolTip="Add caption" Style="{StaticResource AccentButton}"
                                 Command="{Binding AddCaption}" Padding="0">
-                            <StackPanel Orientation="Horizontal">
-                                <material:PackIcon Kind="FormatAnnotationAdd" VerticalAlignment="Center"/>
-                                <Separator Margin="2"/>
-                                <TextBlock Text="Add text" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
+                                <StackPanel Orientation="Horizontal">
+                                    <material:PackIcon Kind="FormatAnnotationAdd" VerticalAlignment="Center"/>
+                                    <Separator Margin="2"/>
+                                    <TextBlock Text="Add text" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
 
-                    </WrapPanel>
+                        </Grid>
 
+                        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding CaptionTexts}">
+                                <ItemsControl.Resources>
+                                    <DataTemplate DataType="{x:Type vm:CaptionTextBoxViewModel}">
 
-                    <ScrollViewer Grid.Row="2">
-                        <ItemsControl ItemsSource="{Binding CaptionTexts}">
-                            <ItemsControl.Resources>
-                                <DataTemplate DataType="{x:Type vm:CaptionTextBoxViewModel}">
+                                        <Border Padding="0 3 0 3" BorderBrush="{StaticResource BorderColor}" BorderThickness="0 0 0 1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="4*"/>
+                                                    <ColumnDefinition MinWidth="35" MaxWidth="70"/>
+                                                    <ColumnDefinition Width="35"/>
+                                                </Grid.ColumnDefinitions>
 
-                                    <Border Padding="0 3 0 3" BorderBrush="LightGray" BorderThickness="0 0 0 1">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="4*"/>
-                                                <ColumnDefinition MinWidth="35" MaxWidth="70"/>
-                                                <ColumnDefinition Width="35"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            <TextBox Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                                                <TextBox
                                                  Text="{Binding CaptionText, UpdateSourceTrigger=PropertyChanged}" 
                                                  material:HintAssist.Hint="{Binding CaptionNumber, FallbackValue=Caption}"
                                                  Margin="5" AcceptsReturn="True"/>
 
-                                            <WrapPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                                <Button Style="{StaticResource MaterialDesignFloatingActionButton}"
+                                                <WrapPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <Button Style="{StaticResource MaterialDesignFloatingActionButton}"
                                                     Padding="0" Width="25" Height="25" Command="{Binding FontSizeUp}"
                                                     ToolTip="Increase font size" Margin="3">
-                                                    <material:PackIcon Kind="FormatFontSizeIncrease"/>
-                                                </Button>
+                                                        <material:PackIcon Kind="FormatFontSizeIncrease"/>
+                                                    </Button>
 
-                                                <Button Style="{StaticResource MaterialDesignFloatingActionButton}"
+                                                    <Button Style="{StaticResource MaterialDesignFloatingActionButton}"
                                                     Padding="0" Width="25" Height="25" Command="{Binding FontSizeDown}"
                                                     ToolTip="Decrease font size" Margin="3">
-                                                    <material:PackIcon Kind="FormatFontSizeDecrease"/>
-                                                </Button>
+                                                        <material:PackIcon Kind="FormatFontSizeDecrease"/>
+                                                    </Button>
 
-                                            </WrapPanel>
+                                                </WrapPanel>
 
-                                            <Button Grid.Column="2" Style="{StaticResource FloatingRedButton}" Padding="0"
+                                                <Button Grid.Column="2" Style="{StaticResource FloatingRedButton}" Padding="0"
                                                 Width="25" Height="25" Command="{Binding ElementName=window, Path=DataContext.RemoveCaption}" CommandParameter="{Binding .}"
                                                 ToolTip="Remove caption" Margin="3">
-                                                <material:PackIcon Kind="Remove"/>
-                                            </Button>
+                                                    <material:PackIcon Kind="Remove"/>
+                                                </Button>
 
-                                        </Grid>
-                                    </Border>
+                                            </Grid>
+                                        </Border>
 
-                                </DataTemplate>
-                            </ItemsControl.Resources>
-                        </ItemsControl>
-                    </ScrollViewer>
+                                    </DataTemplate>
+                                </ItemsControl.Resources>
+                            </ItemsControl>
+                        </ScrollViewer>
 
-                    <Button Grid.Row="4" ToolTip="Generate meme"
+                        <Button Grid.Row="4" ToolTip="Generate meme"
                             Command="{Binding GenerateMeme}" CommandParameter="{Binding ElementName=mainCanvas}">
-                        <StackPanel Orientation="Horizontal">
-                            <material:PackIcon Kind="ContentSave" VerticalAlignment="Center"/>
-                            <Separator Margin="2"/>
-                            <TextBlock Text="Generate Meme" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
+                            <StackPanel Orientation="Horizontal">
+                                <material:PackIcon Kind="ContentSave" VerticalAlignment="Center"/>
+                                <Separator Margin="2"/>
+                                <TextBlock Text="Generate Meme" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
 
-                </Grid>
+                    </Grid>
+                </Border>
 
                 <Canvas Grid.Column="2" x:Name="mainCanvas" ClipToBounds="True">
 
@@ -160,7 +171,7 @@
                         <i:EventTrigger EventName="MouseLeave">
                             <i:InvokeCommandAction Command="{Binding MouseLeftCanvas}">
                                 <i:InvokeCommandAction.CommandParameter>
-                                    <MultiBinding Converter="{StaticResource CanvasSizeconverter}">
+                                    <MultiBinding Converter="{StaticResource CanvasSizeConverter}">
                                         <Binding ElementName="mainCanvas" Path="ActualWidth"/>
                                         <Binding ElementName="mainCanvas" Path="ActualHeight"/>
                                     </MultiBinding>
@@ -185,7 +196,7 @@
                             <DataTemplate DataType="{x:Type vm:CaptionTextBoxViewModel}">
 
                                 <ContentControl Template="{StaticResource DesignerItemTemplate}"
-                                                Width="{Binding ElementName=mainCanvas, Path=ActualWidth}" 
+                                                Width="{Binding ElementName=mainCanvas, Path=ActualWidth, Converter={StaticResource WidthConverter}}" 
                                                 Height="50">
 
                                     <Border>

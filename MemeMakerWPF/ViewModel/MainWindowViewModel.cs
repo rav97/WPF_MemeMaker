@@ -38,6 +38,7 @@ namespace MemeMakerWPF.ViewModel
         {
             LoadFirstImage();
             CalculateRatio(new Size(577.5, 388)); // this will update on image upload or window resize
+            top = (int)((CanvasSize.Height - BackgroundSize.Height) / 2) + 5;
         }
 
         #region [ COMMANDS ]
@@ -84,11 +85,11 @@ namespace MemeMakerWPF.ViewModel
         {
             get => RelayCommand.Command(() =>
             {
-                CaptionTexts.Add(new CaptionTextBoxViewModel(captionCount, top, 0));
+                CaptionTexts.Add(new CaptionTextBoxViewModel(captionCount, top, 15));
                 captionCount++;
 
                 if (top >= CanvasSize.Height)
-                    top = 0;
+                    top = (int)((CanvasSize.Height - BackgroundSize.Height) / 2) + 5;
                 else
                     top += 50;
             });
@@ -115,20 +116,25 @@ namespace MemeMakerWPF.ViewModel
             get => RelayCommand.Command((Size size) =>
             {
                 ManipulationBoxVisibility = Visibility.Hidden;
+
+                // to make sure all sizes are up to date
                 CalculateRatio(size);
             });
         }
 
         public ICommand GenerateMeme
         {
-            get => RelayCommand.Command((Canvas canvas) =>
+            get => RelayCommand.Command(async (Canvas canvas) =>
             {
                 try
                 {
                     CalculateRatio(canvas.RenderSize);
                     var bitmap = BitmapOperations.GetBitmapFromCanvas(canvas);
                     var scaled = BitmapOperations.TryScaleUpImage(bitmap, Background.Width, Background.Height);
-                    BitmapOperations.SavePng(scaled, $"MEME_{Path.GetFileNameWithoutExtension(Background.UriSource.ToString())}.png");
+                    var saved = BitmapOperations.SavePng(scaled, $"MEME_{Path.GetFileNameWithoutExtension(Background.UriSource.ToString())}.png");
+
+                    if (saved)
+                        await Dialogs.ShowMessage("Your meme should be saved :)");
                 }
                 catch(Exception e)
                 {
@@ -206,7 +212,7 @@ namespace MemeMakerWPF.ViewModel
         /// </summary>
         private void LoadFirstImage()
         {
-            BitmapImage image = Application.Current.FindResource("InitialImage") as BitmapImage;
+            BitmapImage image = new BitmapImage(new Uri("pack://application:,,,/Utility/Resources/template.jpg", UriKind.Absolute));
             Background = image;
         }
 

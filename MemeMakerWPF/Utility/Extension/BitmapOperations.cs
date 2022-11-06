@@ -70,27 +70,30 @@ namespace MemeMakerWPF.Utility.Extension
         }
 
         /// <summary>
-        /// Gets TransformedBitmap and saves it as PNG in given location
+        /// Gets Bitmap and saves it as PNG in given location
         /// </summary>
-        /// <param name="bitmap">TransformedBitmap from GetBitmap() method</param>
-        public static void SavePng(Bitmap bitmap, string fileName)
+        /// <param name="bitmap">TransformedBitmap from GetBitmapFromCanvas() method</param>
+        public static bool SavePng(Bitmap bitmap, string fileName)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             saveFileDialog.FileName = fileName;
 
-
             if (saveFileDialog.ShowDialog() == true)
             {
                 using (var file = File.OpenWrite(saveFileDialog.FileName))
                     bitmap.Save(file, ImageFormat.Png);
+
+                return true;
             }
+
+            return false;
         }
 
         /// <summary>
         /// Gets TransformedBitmap and saves it as PNG in given location
         /// </summary>
-        /// <param name="bitmap">TransformedBitmap from GetBitmap() method</param>
+        /// <param name="bitmap">RenderTargetBitmap from GetBitmapFromCanvas() method</param>
         public static void SavePng(RenderTargetBitmap bitmap, string fileName)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -154,9 +157,16 @@ namespace MemeMakerWPF.Utility.Extension
             var newWidth = (int)(bitmap.Width * ratio);
             var newHeight = (int)(bitmap.Height * ratio);
 
-            var newImage = new Bitmap(bitmap, newWidth, newHeight);
+            Bitmap result = new Bitmap(newWidth, newHeight);
+            using (Graphics g = Graphics.FromImage(result))
+            {
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
+                g.DrawImage(bitmap, 0, 0, newWidth, newHeight);
+            }
 
-            return newImage;
+            //var newImage = new Bitmap(bitmap, newWidth, newHeight);
+
+            return result;
         }
     }
 }

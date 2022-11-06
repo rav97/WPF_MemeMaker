@@ -7,13 +7,15 @@
              xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:res="clr-namespace:MemeMakerWPF.Utility.Resources"
              mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="400"
-             MinWidth="400" MinHeight="150">
+             d:DesignHeight="160" d:DesignWidth="400"
+             MinWidth="400" MinHeight="160"
+             MaxHeight="400" MaxWidth="600">
+    
     <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -34,13 +36,16 @@
                    Orientation="Horizontal">
             
             <Button Width="80" Content="{x:Static res:Labels.Ok}"
-                    Command="{Binding CancelCommand}" Visibility="{Binding IsMessage}"/>
+                    Command="{Binding OkCommand}" Visibility="{Binding IsMessage, FallbackValue=Collapsed}"/>
 
-            <Button Width="80" Content="{x:Static res:Labels.Yes}"
-                    Command="{Binding YesCommand}" Visibility="{Binding IsQuestion}"/>
+            <Button Width="80" Content="{x:Static res:Labels.Yes}" Style="{StaticResource AccentButton}"
+                    Command="{Binding YesCommand}" Visibility="{Binding IsQuestion, FallbackValue=Collapsed}"/>
+
+            <Button Width="80" Content="{x:Static res:Labels.No}" 
+                    Command="{Binding NoCommand}" Visibility="{Binding IsQuestion, FallbackValue=Collapsed}"/>
 
             <Button Width="80" Content="{x:Static res:Labels.Cancel}" Style="{StaticResource AccentButton}"
-                    Command="{Binding CancelCommand}" Visibility="{Binding IsMessage}"/>
+                    Command="{Binding CancelCommand}" Visibility="{Binding IsQuesition, FallbackValue=Collapsed}"/>
 
         </WrapPanel>
 
