@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\App.xaml
-2-1577885263
+4-1131486642
 
-10456645708
-17655387213
-View\MainWindow.xaml;Utility\Controls\WindowBeam.xaml;
+17649669601
+18309747804
+View\UserInterface\DialogView.xaml;View\MainWindow.xaml;Utility\Controls\WindowBeam.xaml;View\UserInterface\AppDialogView.xaml;
 
 False
 

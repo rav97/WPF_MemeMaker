@@ -14,7 +14,7 @@ namespace MemeMakerWPF.ViewModel
 
         private string captionText;
         private string captionNumber;
-        private int fontSize = 20;
+        private int fontSize = 30;
 
         private int leftPos, topPos;
 
@@ -57,7 +57,7 @@ namespace MemeMakerWPF.ViewModel
             get => captionText;
             set
             {
-                captionText = value;
+                captionText = value.ToUpper();
                 RaisePropertyChanged();
             }
         }

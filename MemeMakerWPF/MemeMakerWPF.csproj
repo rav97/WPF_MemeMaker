@@ -48,6 +48,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -66,10 +67,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Utility\Extension\BitmapOperations.cs" />
+    <Compile Include="Utility\Controls\Dialogs.cs" />
+    <Compile Include="Utility\Resources\Labels.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Labels.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\UserInterface\AppDialogViewModel.cs" />
+    <Compile Include="View\UserInterface\DialogView.xaml.cs">
+      <DependentUpon>DialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utility\Controls\ExtendedWindow.cs" />
     <Compile Include="Utility\Controls\ThumbExtensions.cs" />
     <Compile Include="Utility\Controls\WindowBeam.xaml.cs">
       <DependentUpon>WindowBeam.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\UserInterface\AppDialogView.xaml.cs">
+      <DependentUpon>AppDialogView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="View\UserInterface\DialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -86,6 +106,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Utility\Controls\WindowBeam.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserInterface\AppDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -108,6 +132,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Utility\Resources\Labels.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Labels.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -122,6 +150,9 @@
       <Project>{990857fb-60c9-461a-bc43-57a82177c8b1}</Project>
       <Name>MvvmLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Utility\Resources\First_image.jpg" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

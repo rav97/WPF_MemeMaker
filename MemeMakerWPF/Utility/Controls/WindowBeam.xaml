@@ -8,10 +8,11 @@
              mc:Ignorable="d" d:DesignWidth="800" x:Name="beam"
              MouseDown="UserControl_MouseDown">
     
-    <material:ColorZone Mode="PrimaryMid" Padding="5" material:ShadowAssist.ShadowDepth="Depth2"  DockPanel.Dock="Top">
+    <material:ColorZone Mode="PrimaryDark" Padding="5" material:ShadowAssist.ShadowDepth="Depth2"  DockPanel.Dock="Top">
         <Grid>
 
-            <TextBlock Margin="20,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" 
+            <TextBlock Margin="20,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" 
+                       Style="{StaticResource TitleTextBlock}" 
                        Text="{Binding ElementName=beam, Path=Header, FallbackValue=WindowHeader }"/>
 
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">

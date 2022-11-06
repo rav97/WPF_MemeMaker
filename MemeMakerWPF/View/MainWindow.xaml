@@ -1,38 +1,50 @@
-﻿<Window x:Class="MemeMakerWPF.View.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MemeMakerWPF.View"
-        xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:c="clr-namespace:MemeMakerWPF.Utility.Controls"
-        xmlns:convert="clr-namespace:MemeMakerWPF.Utility.Converters"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:vm="clr-namespace:MemeMakerWPF.ViewModel"
-        mc:Ignorable="d" x:Name="window" 
-        Style="{StaticResource FullWindow}"
-        Title="WPF Meme Maker" Height="450" Width="800">
-
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding OnLoad}"/>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
+﻿<c:ExtendedWindow x:Class="MemeMakerWPF.View.MainWindow"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:local="clr-namespace:MemeMakerWPF.View"
+                xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+                xmlns:c="clr-namespace:MemeMakerWPF.Utility.Controls"
+                xmlns:convert="clr-namespace:MemeMakerWPF.Utility.Converters"
+                xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+                xmlns:vm="clr-namespace:MemeMakerWPF.ViewModel"
+                xmlns:res="clr-namespace:MemeMakerWPF.Utility.Resources"
+                mc:Ignorable="d" 
+                x:Name="window" DialogIdentifier="MainWindow"
+                Style="{StaticResource FullWindow}"
+                Title="{x:Static res:Labels.AppName}" Height="450" Width="800">
 
     <Window.Resources>
         <convert:CanvasSizeConverter x:Key="CanvasSizeconverter"/>
     </Window.Resources>
 
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding OnLoad}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="SizeChanged">
+            <i:InvokeCommandAction Command="{Binding RefreshSizes}">
+                <i:InvokeCommandAction.CommandParameter>
+                    <MultiBinding Converter="{StaticResource CanvasSizeconverter}">
+                        <Binding ElementName="mainCanvas" Path="ActualWidth"/>
+                        <Binding ElementName="mainCanvas" Path="ActualHeight"/>
+                    </MultiBinding>
+                </i:InvokeCommandAction.CommandParameter>
+            </i:InvokeCommandAction>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
-            <c:WindowBeam Header="{Binding ElementName=window, Path=Title}"/>
+        <c:WindowBeam Header="{Binding ElementName=window, Path=Title}"/>
 
-            <Grid Grid.Row="1" Margin="10">
+        <Grid x:Name="ContentPanel" Grid.Row="1">
+            <Grid Margin="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition MinWidth="130" MaxWidth="260"/>
                     <ColumnDefinition Width="10"/>
@@ -52,7 +64,7 @@
                     <WrapPanel Grid.Row="0" Orientation="Horizontal">
 
                         <Button ToolTip="Add Background Image" Width="120"
-                                Command="{Binding SetBackground}"
+                                Command="{Binding SetBackground}" Style="{StaticResource AccentButton}"
                                 Padding="0">
 
                             <Button.CommandParameter>
@@ -61,7 +73,7 @@
                                     <Binding ElementName="mainCanvas" Path="ActualHeight"/>
                                 </MultiBinding>
                             </Button.CommandParameter>
-                            
+
                             <StackPanel Orientation="Horizontal">
                                 <material:PackIcon Kind="ImageAdd" VerticalAlignment="Center"/>
                                 <Separator Margin="2"/>
@@ -69,7 +81,7 @@
                             </StackPanel>
                         </Button>
 
-                        <Button ToolTip="Add caption" Width="120"
+                        <Button ToolTip="Add caption" Width="120" Style="{StaticResource AccentButton}"
                                 Command="{Binding AddCaption}" Padding="0">
                             <StackPanel Orientation="Horizontal">
                                 <material:PackIcon Kind="FormatAnnotationAdd" VerticalAlignment="Center"/>
@@ -100,13 +112,13 @@
                                                  Margin="5" AcceptsReturn="True"/>
 
                                             <WrapPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                                <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                                                <Button Style="{StaticResource MaterialDesignFloatingActionButton}"
                                                     Padding="0" Width="25" Height="25" Command="{Binding FontSizeUp}"
                                                     ToolTip="Increase font size" Margin="3">
                                                     <material:PackIcon Kind="FormatFontSizeIncrease"/>
                                                 </Button>
 
-                                                <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                                                <Button Style="{StaticResource MaterialDesignFloatingActionButton}"
                                                     Padding="0" Width="25" Height="25" Command="{Binding FontSizeDown}"
                                                     ToolTip="Decrease font size" Margin="3">
                                                     <material:PackIcon Kind="FormatFontSizeDecrease"/>
@@ -114,7 +126,7 @@
 
                                             </WrapPanel>
 
-                                            <Button Grid.Column="2" Style="{StaticResource RedButton}" Padding="0"
+                                            <Button Grid.Column="2" Style="{StaticResource FloatingRedButton}" Padding="0"
                                                 Width="25" Height="25" Command="{Binding ElementName=window, Path=DataContext.RemoveCaption}" CommandParameter="{Binding .}"
                                                 ToolTip="Remove caption" Margin="3">
                                                 <material:PackIcon Kind="Remove"/>
@@ -128,7 +140,8 @@
                         </ItemsControl>
                     </ScrollViewer>
 
-                    <Button Grid.Row="4" ToolTip="Generate meme">
+                    <Button Grid.Row="4" ToolTip="Generate meme"
+                            Command="{Binding GenerateMeme}" CommandParameter="{Binding ElementName=mainCanvas}">
                         <StackPanel Orientation="Horizontal">
                             <material:PackIcon Kind="ContentSave" VerticalAlignment="Center"/>
                             <Separator Margin="2"/>
@@ -138,14 +151,21 @@
 
                 </Grid>
 
-                <Canvas Grid.Column="2" x:Name="mainCanvas">
+                <Canvas Grid.Column="2" x:Name="mainCanvas" ClipToBounds="True">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseEnter">
                             <i:InvokeCommandAction Command="{Binding MouseOverCanvas}"/>
                         </i:EventTrigger>
                         <i:EventTrigger EventName="MouseLeave">
-                            <i:InvokeCommandAction Command="{Binding MouseLeftCanvas}"/>
+                            <i:InvokeCommandAction Command="{Binding MouseLeftCanvas}">
+                                <i:InvokeCommandAction.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource CanvasSizeconverter}">
+                                        <Binding ElementName="mainCanvas" Path="ActualWidth"/>
+                                        <Binding ElementName="mainCanvas" Path="ActualHeight"/>
+                                    </MultiBinding>
+                                </i:InvokeCommandAction.CommandParameter>
+                            </i:InvokeCommandAction>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
 
@@ -165,7 +185,8 @@
                             <DataTemplate DataType="{x:Type vm:CaptionTextBoxViewModel}">
 
                                 <ContentControl Template="{StaticResource DesignerItemTemplate}"
-                                                Width="90" Height="90">
+                                                Width="{Binding ElementName=mainCanvas, Path=ActualWidth}" 
+                                                Height="50">
 
                                     <Border>
                                         <Border>
@@ -225,8 +246,8 @@
                 </Canvas>
 
             </Grid>
-
         </Grid>
+
     </Grid>
 
-</Window>
+</c:ExtendedWindow>

@@ -59,3 +59,8 @@ C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\obj\Debug\MemeMakerWPF.cs
 C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\obj\Debug\MemeMakerWPF.csproj.CopyComplete
 C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\obj\Debug\MemeMakerWPF.exe
 C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\obj\Debug\MemeMakerWPF.pdb
+C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\obj\Debug\View\UserInterface\DialogView.g.cs
+C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\obj\Debug\View\UserInterface\AppDialogView.g.cs
+C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\obj\Debug\View\UserInterface\DialogView.baml
+C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\obj\Debug\View\UserInterface\AppDialogView.baml
+C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\obj\Debug\MemeMakerWPF.Utility.Resources.Labels.resources

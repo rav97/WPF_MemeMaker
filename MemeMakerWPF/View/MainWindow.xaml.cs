@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MemeMakerWPF.Utility.Controls;
 using MemeMakerWPF.ViewModel;
 
 namespace MemeMakerWPF.View
@@ -19,7 +20,7 @@ namespace MemeMakerWPF.View
     /// <summary>
     /// Logika interakcji dla klasy MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : ExtendedWindow
     {
         public MainWindow()
         {

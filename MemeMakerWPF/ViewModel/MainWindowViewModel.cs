@@ -1,13 +1,19 @@
-﻿using Microsoft.Win32;
+﻿using MemeMakerWPF.Properties;
+using MemeMakerWPF.Utility.Controls;
+using MemeMakerWPF.Utility.Extension;
+using Microsoft.Win32;
 using MvvmLib;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace MemeMakerWPF.ViewModel
@@ -16,7 +22,7 @@ namespace MemeMakerWPF.ViewModel
     {
         #region [ VARIABLES ]
 
-        private int captionCount = 1, top=0, left=0;
+        private int captionCount = 1, top = 0;
         private BitmapImage background;
         private Visibility manipulationBoxVisibility = Visibility.Hidden;
         private Size canvasSize, backgroundSize;
@@ -30,10 +36,22 @@ namespace MemeMakerWPF.ViewModel
 
         protected override void OnLoadEvent(object o)
         {
-
+            LoadFirstImage();
+            CalculateRatio(new Size(577.5, 388)); // this will update on image upload or window resize
         }
 
         #region [ COMMANDS ]
+
+        public ICommand RefreshSizes
+        {
+            get => RelayCommand.Command((Size size) =>
+            {
+                if (Background != null)
+                {
+                    CalculateRatio(size);
+                }
+            });
+        }
 
         public ICommand SetBackground
         {
@@ -46,10 +64,16 @@ namespace MemeMakerWPF.ViewModel
                 {
                     try
                     {
-                        Background = new BitmapImage(new Uri(openFileDialog.FileName));
-                        CanvasSize = new Size(size.Width, size.Height);
-                        CalculateRatio(size);
-                        InitFirstCaptions();
+                        if (Settings.Default.ALLOWED_EXTENSIONS.Contains(Path.GetExtension(openFileDialog.FileName)))
+                        {
+                            Background = new BitmapImage(new Uri(openFileDialog.FileName));
+                            CalculateRatio(size);
+                            InitFirstCaptions();
+                        }
+                        else
+                        {
+                            Dialogs.ShowError("Invalid image extension");
+                        }
                     }
                     catch { }
                 }
@@ -60,8 +84,13 @@ namespace MemeMakerWPF.ViewModel
         {
             get => RelayCommand.Command(() =>
             {
-                CaptionTexts.Add(new CaptionTextBoxViewModel(captionCount, top+=50, left+=50));
+                CaptionTexts.Add(new CaptionTextBoxViewModel(captionCount, top, 0));
                 captionCount++;
+
+                if (top >= CanvasSize.Height)
+                    top = 0;
+                else
+                    top += 50;
             });
         }
 
@@ -83,18 +112,42 @@ namespace MemeMakerWPF.ViewModel
 
         public ICommand MouseLeftCanvas
         {
-            get => RelayCommand.Command(() =>
+            get => RelayCommand.Command((Size size) =>
             {
                 ManipulationBoxVisibility = Visibility.Hidden;
+                CalculateRatio(size);
             });
         }
 
+        public ICommand GenerateMeme
+        {
+            get => RelayCommand.Command((Canvas canvas) =>
+            {
+                try
+                {
+                    CalculateRatio(canvas.RenderSize);
+                    var bitmap = BitmapOperations.GetBitmapFromCanvas(canvas);
+                    var scaled = BitmapOperations.TryScaleUpImage(bitmap, Background.Width, Background.Height);
+                    BitmapOperations.SavePng(scaled, $"MEME_{Path.GetFileNameWithoutExtension(Background.UriSource.ToString())}.png");
+                }
+                catch(Exception e)
+                {
+                    Dialogs.ShowError(e.Message);
+                }
+            });
+        }
 
         #endregion
 
         #region [ PUBLIC ]
-
+        /// <summary>
+        /// Collection of VievModels controling caption texts
+        /// </summary>
         public ObservableCollection<CaptionTextBoxViewModel> CaptionTexts { get; set; }
+
+        /// <summary>
+        /// Source of background image. Containing also oryginal size of image
+        /// </summary>
         public BitmapImage Background
         {
             get => background;
@@ -105,6 +158,9 @@ namespace MemeMakerWPF.ViewModel
             }
         }
 
+        /// <summary>
+        /// Property bound to visibility of ResizeThumb
+        /// </summary>
         public Visibility ManipulationBoxVisibility
         {
             get => manipulationBoxVisibility;
@@ -115,6 +171,9 @@ namespace MemeMakerWPF.ViewModel
             }
         }
 
+        /// <summary>
+        /// Actual size of canvas
+        /// </summary>
         public Size CanvasSize
         {
             get => canvasSize;
@@ -125,6 +184,9 @@ namespace MemeMakerWPF.ViewModel
             }
         }
 
+        /// <summary>
+        /// Actual size of background image (background image inside canvas without empty space)
+        /// </summary>
         public Size BackgroundSize
         {
             get => backgroundSize;
@@ -139,19 +201,64 @@ namespace MemeMakerWPF.ViewModel
 
         #region [ METHODS ]
 
-        private void InitFirstCaptions()
+        /// <summary>
+        /// Load template image from App resources
+        /// </summary>
+        private void LoadFirstImage()
         {
-            CaptionTexts.Add(new CaptionTextBoxViewModel(captionCount, (int)(CanvasSize.Height - BackgroundSize.Height) / 2, 200));
-            captionCount++;
-            CaptionTexts.Add(new CaptionTextBoxViewModel(captionCount, ((int)(CanvasSize.Height - BackgroundSize.Height) / 2) + (int)BackgroundSize.Height - 90, 200));
-            captionCount++;
+            BitmapImage image = Application.Current.FindResource("InitialImage") as BitmapImage;
+            Background = image;
         }
 
+        /// <summary>
+        /// Creates two caption fields it there is none
+        /// </summary>
+        private void InitFirstCaptions()
+        {
+            if (CaptionTexts.Count == 0)
+            {
+                CaptionTexts.Add(new CaptionTextBoxViewModel(captionCount, GetCalculatedTopPosition(), 0));
+                captionCount++;
+                CaptionTexts.Add(new CaptionTextBoxViewModel(captionCount, GetCalculatedBottomPosition(), 0));
+                captionCount++;
+            }
+        }
+
+        /// <summary>
+        /// Calculate position needed to place first caption
+        /// </summary>
+        /// <returns>Canvas.Top position</returns>
+        private int GetCalculatedTopPosition()
+        {
+            if (CanvasSize == null || BackgroundSize == null)
+                return 0;
+
+            return (int)(CanvasSize.Height - BackgroundSize.Height) / 2;
+        }
+
+        /// <summary>
+        /// Calculate position needed to place second caption
+        /// </summary>
+        /// <returns>Canvas.Top position</returns>
+        private int GetCalculatedBottomPosition()
+        {
+            if (CanvasSize == null || BackgroundSize == null)
+                return 100;
+
+            return GetCalculatedTopPosition() + (int)BackgroundSize.Height - 90;
+        }
+
+        /// <summary>
+        /// Calculates CanvasSize and actual background image size
+        /// </summary>
         private void CalculateRatio(Size actual)
         {
+            CanvasSize = new Size(actual.Width, actual.Height);
             var ratio = Math.Min(actual.Width / Background.Width, actual.Height / Background.Height);
             BackgroundSize = new Size(Background.Width * ratio, Background.Height * ratio);
         }
+
+        
 
         #endregion
 

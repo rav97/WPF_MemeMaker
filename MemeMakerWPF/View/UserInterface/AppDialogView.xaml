@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="MemeMakerWPF.View.UserInterface.AppDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MemeMakerWPF.View.UserInterface"
+             xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:res="clr-namespace:MemeMakerWPF.Utility.Resources"
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="400"
+             MinWidth="400" MinHeight="150">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="50"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Style="{StaticResource TitleTextBlock}" Margin="0 0 0 15"
+                   Text="{x:Static res:Labels.AppName}" Foreground="Black"/>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="400">
+            <TextBlock Text="{Binding Message}"/>
+        </ScrollViewer>
+
+        <WrapPanel Grid.Row="2" Grid.ColumnSpan="2"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Center"
+                   Orientation="Horizontal">
+            
+            <Button Width="80" Content="{x:Static res:Labels.Ok}"
+                    Command="{Binding CancelCommand}" Visibility="{Binding IsMessage}"/>
+
+            <Button Width="80" Content="{x:Static res:Labels.Yes}"
+                    Command="{Binding YesCommand}" Visibility="{Binding IsQuestion}"/>
+
+            <Button Width="80" Content="{x:Static res:Labels.Cancel}" Style="{StaticResource AccentButton}"
+                    Command="{Binding CancelCommand}" Visibility="{Binding IsMessage}"/>
+
+        </WrapPanel>
+
+    </Grid>
+</UserControl>
