@@ -30,6 +30,7 @@ namespace MemeMakerWPF.Utility.Controls
 
         public ExtendedWindow()
         {
+            this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
             this.Loaded += ExtendedWindow_Loaded;
             this.KeyDown += ExtendedWindow_KeyDown;
         }
