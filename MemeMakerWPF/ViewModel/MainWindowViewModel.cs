@@ -1,6 +1,7 @@
 ﻿using MemeMakerWPF.Properties;
 using MemeMakerWPF.Utility.Controls;
 using MemeMakerWPF.Utility.Extension;
+using MemeMakerWPF.Utility.Managers;
 using Microsoft.Win32;
 using MvvmLib;
 using System;
@@ -23,15 +24,20 @@ namespace MemeMakerWPF.ViewModel
         #region [ VARIABLES ]
 
         private int captionCount = 1, top = 0;
+        private string templateName;
         private BitmapImage background;
         private Visibility manipulationBoxVisibility = Visibility.Hidden;
         private Size canvasSize, backgroundSize;
+
+        private ApiConnection apiConnection;
 
         #endregion
 
         public MainWindowViewModel()
         {
             CaptionTexts = new ObservableCollection<CaptionTextBoxViewModel>();
+
+            apiConnection = new ApiConnection();
         }
 
         protected override void OnLoadEvent(object o)
@@ -39,9 +45,22 @@ namespace MemeMakerWPF.ViewModel
             LoadFirstImage();
             CalculateRatio(new Size(577.5, 388)); // this will update on image upload or window resize
             top = (int)((CanvasSize.Height - BackgroundSize.Height) / 2) + 5;
+            templateName = Path.GetFileNameWithoutExtension(Background.UriSource.ToString());
         }
 
         #region [ COMMANDS ]
+
+        public ICommand TestApi
+        {
+            get => RelayCommand.Command(() =>
+            {
+                ApiTemplateManager manager = new ApiTemplateManager();
+                var data = manager.GetTemplateById(1);
+
+                var bitmap = data.GetBitmap();
+                Background = bitmap;
+            });
+        }
 
         public ICommand RefreshSizes
         {
@@ -56,27 +75,16 @@ namespace MemeMakerWPF.ViewModel
 
         public ICommand SetBackground
         {
-            get => RelayCommand.Command((Size size) =>
+            get => RelayCommand.Command(async (Size size) =>
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                openFileDialog.Filter = "Image files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg|All files (*.*)|*.*";
-                if (openFileDialog.ShowDialog() == true)
+                SetBackgroundViewModel vm = new SetBackgroundViewModel();
+                await vm.ShowView();
+
+                if (vm.Selected)
                 {
-                    try
-                    {
-                        if (Settings.Default.ALLOWED_EXTENSIONS.Contains(Path.GetExtension(openFileDialog.FileName)))
-                        {
-                            Background = new BitmapImage(new Uri(openFileDialog.FileName));
-                            CalculateRatio(size);
-                            InitFirstCaptions();
-                        }
-                        else
-                        {
-                            Dialogs.ShowError("Invalid image extension");
-                        }
-                    }
-                    catch { }
+                    Background = vm.TemplateImage;
+                    templateName = vm.SelectedTemplateName;
+                    CalculateRatio(size);
                 }
             });
         }
@@ -131,7 +139,8 @@ namespace MemeMakerWPF.ViewModel
                     CalculateRatio(canvas.RenderSize);
                     var bitmap = BitmapOperations.GetBitmapFromCanvas(canvas);
                     var scaled = BitmapOperations.TryScaleUpImage(bitmap, Background.Width, Background.Height);
-                    var saved = BitmapOperations.SavePng(scaled, $"MEME_{Path.GetFileNameWithoutExtension(Background.UriSource.ToString())}.png");
+
+                    var saved = BitmapOperations.SavePng(scaled, $"MEME_{templateName}.png");
 
                     if (saved)
                         await Dialogs.ShowMessage("Your meme should be saved :)");

@@ -4,7 +4,8 @@
              xmlns:local="clr-namespace:MemeMakerWPF"
              xmlns:material ="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:c="clr-namespace:MemeMakerWPF.Utility.Controls"
-             StartupUri="View/MainWindow.xaml">
+             StartupUri="View/MainWindow.xaml"
+             Exit="Application_Exit">
     
     <Application.Resources>
         <ResourceDictionary>
@@ -21,23 +22,45 @@
 
             <!-- WINDOW -->
             
-            <Style x:Key="WindowStyle" TargetType="Window">
+            <Style x:Key="WindowStyle" TargetType="{x:Type Window}">
                 <Setter Property="TextElement.Foreground" Value="{DynamicResource MaterialDesignBody}"/>
                 <Setter Property="TextElement.FontWeight" Value="Regular"/>
                 <Setter Property="TextElement.FontSize" Value="13"/>
                 <Setter Property="TextOptions.TextFormattingMode" Value="Ideal"/>
                 <Setter Property="TextOptions.TextRenderingMode" Value="Auto"/>
-                <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}"/>
+                <Setter Property="Background" Value="{StaticResource MaterialDesignDarkBackground}"/>
                 <Setter Property="FontFamily" Value="{DynamicResource MaterialDesignFont}"/>
             </Style>
 
-            <Style x:Key="FullWindow" TargetType="Window">
+            <Style x:Key="FullWindow" TargetType="Window" BasedOn="{StaticResource WindowStyle}">
                 <Setter Property="WindowStyle" Value="None"/>
                 <Setter Property="AllowsTransparency" Value="True"/>
                 <Setter Property="WindowState" Value="Maximized"/>
                 <Setter Property="ResizeMode" Value="CanResizeWithGrip"/>
             </Style>
+            
+            <!-- CARD -->
 
+            <Style x:Key="ModalStyle" TargetType="{x:Type material:Card}">
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                <Setter Property="TextElement.FontWeight" Value="Regular"/>
+                <Setter Property="TextElement.FontSize" Value="13"/>
+                <Setter Property="TextOptions.TextFormattingMode" Value="Ideal"/>
+                <Setter Property="TextOptions.TextRenderingMode" Value="Auto"/>
+                <Setter Property="Background" Value="{StaticResource MaterialDesignDarkBackground}"/>
+                <Setter Property="FontFamily" Value="{DynamicResource MaterialDesignFont}"/>
+                <Setter Property="Padding" Value="10"/>
+            </Style>
+            
+            <!-- BORDER -->
+
+            <Style x:Key="HeaderBorder" TargetType="Border">
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+                <Setter Property="BorderThickness" Value="0 0 0 2"/>
+                <Setter Property="Padding" Value="10 0 10 10"/>
+                <Setter Property="Margin" Value="0 0 0 10"/>
+            </Style>
+            
             <!-- BUTTONS -->
             
             <Style x:Key="ToolbarButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignRaisedButton}">
@@ -45,6 +68,24 @@
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Width" Value="35" />
                 <Setter Property="Padding" Value="0" />
+            </Style>
+
+            <Style x:Key="CardCloseButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignRaisedAccentButton}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="VerticalAlignment" Value="Top"/>
+                <Setter Property="Margin" Value="0 -5 5 0"/>
+                <Setter Property="Command" Value="{Binding Cancel}"/>
+                <Setter Property="Panel.ZIndex" Value="10"/>
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <material:PackIcon Kind="Close"
+                                           Foreground="{StaticResource BorderColor}"
+                                           Height="30" Width="30"/>
+                    </Setter.Value>
+                </Setter>
             </Style>
 
             <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignRaisedButton}">
@@ -78,15 +119,38 @@
                 <Setter Property="CaretBrush" Value="{StaticResource MaterialDesignPaper}"/>
                 <Setter Property="material:HintAssist.Foreground" Value="{StaticResource MaterialDesignPaper}"/>
             </Style>
+
+            <Style x:Key="ValidTextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}">
+                <Setter Property="Foreground" Value="{StaticResource MaterialDesignPaper}"/>
+                <Setter Property="material:TextFieldAssist.UnderlineBrush" Value="{StaticResource MaterialDesignPaper}"/>
+                <Setter Property="CaretBrush" Value="{StaticResource MaterialDesignPaper}"/>
+                <Setter Property="material:HintAssist.Foreground" Value="{StaticResource MaterialDesignPaper}"/>
+                <Setter Property="ToolBar.Background" Value="{StaticResource MaterialDesignDarkBackground}"/>
+                <Setter Property="ToolBar.ToolTip">
+                    <Setter.Value>
+                        <Binding RelativeSource="{RelativeSource self}" Path="(Validation.Errors)[0].ErrorContent"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Margin" Value="0 5 0 15"/>
+            </Style>
             
             <!-- TEXTBLOCK -->
+
+            <Style TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignTextBlock}">
+                <Setter Property="Foreground" Value="{StaticResource MaterialDesignPaper}"/>
+            </Style>
 
             <Style x:Key="TitleTextBlock" TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignHeadline5TextBlock}">
                 <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}"/>
                 <Setter Property="FontWeight" Value="DemiBold"/>
                 <Setter Property="FontSize" Value="20"/>
             </Style>
-            
+
+            <Style x:Key="ModalTitleTextBlock" TargetType="TextBlock" BasedOn="{StaticResource TitleTextBlock}">
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="FontSize" Value="18"/>
+            </Style>
+
             <!-- TEMPLATE -->
             
             <!-- MoveThumb Template -->

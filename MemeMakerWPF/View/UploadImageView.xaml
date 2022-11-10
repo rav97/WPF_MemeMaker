@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="MemeMakerWPF.View.UploadImageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MemeMakerWPF.View"
+             xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:c="clr-namespace:MemeMakerWPF.Utility.Controls"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:res="clr-namespace:MemeMakerWPF.Utility.Resources"
+             mc:Ignorable="d">
+    <Grid>
+        <material:Card Width="400" Height="170" 
+                       Style="{StaticResource ModalStyle}">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Style="{StaticResource HeaderBorder}">
+                    <TextBlock Text="Upload image" Style="{StaticResource ModalTitleTextBlock}"/>
+                </Border>
+
+                <Button Style="{StaticResource CardCloseButton}"/>
+
+                <TextBox Grid.Row="1"
+                         material:HintAssist.Hint="Image name"
+                         Text="{Binding UploadImageData.ImageName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
+                         Style="{StaticResource ValidTextBox}"
+                         />
+
+                <StackPanel Grid.Row="2" Orientation="Horizontal"
+                            VerticalAlignment="Bottom" HorizontalAlignment="Right">
+
+                    <Button Content="Upload"
+                            Command="{Binding Upload}"
+                            MinWidth="100"/>
+
+                    <Button Content="{x:Static res:Labels.Cancel}"
+                            Style="{StaticResource AccentButton}"
+                            Command="{Binding Cancel}"
+                            MinWidth="100" Cursor="Hand"/>
+
+                </StackPanel>
+
+            </Grid>
+            
+        </material:Card>
+    </Grid>
+</UserControl>

@@ -10,44 +10,46 @@
              d:DesignHeight="160" d:DesignWidth="400"
              MinWidth="400" MinHeight="160"
              MaxHeight="400" MaxWidth="600">
-    
-    <Grid Margin="15">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-            <RowDefinition Height="50"/>
-        </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="50"/>
-        </Grid.ColumnDefinitions>
+    <material:Card Style="{StaticResource ModalStyle}">
+        <Grid Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
 
-        <TextBlock Style="{StaticResource TitleTextBlock}" Margin="0 0 0 15"
-                   Text="{x:Static res:Labels.AppName}" Foreground="Black"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="50"/>
+            </Grid.ColumnDefinitions>
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="400">
-            <TextBlock Text="{Binding Message}"/>
-        </ScrollViewer>
+            <TextBlock Style="{StaticResource TitleTextBlock}" Margin="0 0 0 15"
+                   Text="{x:Static res:Labels.AppName}"/>
 
-        <WrapPanel Grid.Row="2" Grid.ColumnSpan="2"
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="400">
+                <TextBlock Text="{Binding Message, FallbackValue=Sample text}"/>
+            </ScrollViewer>
+
+            <WrapPanel Grid.Row="2" Grid.ColumnSpan="2"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Center"
                    Orientation="Horizontal">
-            
-            <Button Width="80" Content="{x:Static res:Labels.Ok}"
+
+                <Button Width="80" Content="{x:Static res:Labels.Ok}"
                     Command="{Binding OkCommand}" Visibility="{Binding IsMessage, FallbackValue=Collapsed}"/>
 
-            <Button Width="80" Content="{x:Static res:Labels.Yes}" Style="{StaticResource AccentButton}"
+                <Button Width="80" Content="{x:Static res:Labels.Yes}" Style="{StaticResource AccentButton}"
                     Command="{Binding YesCommand}" Visibility="{Binding IsQuestion, FallbackValue=Collapsed}"/>
 
-            <Button Width="80" Content="{x:Static res:Labels.No}" 
+                <Button Width="80" Content="{x:Static res:Labels.No}" 
                     Command="{Binding NoCommand}" Visibility="{Binding IsQuestion, FallbackValue=Collapsed}"/>
 
-            <Button Width="80" Content="{x:Static res:Labels.Cancel}" Style="{StaticResource AccentButton}"
+                <Button Width="80" Content="{x:Static res:Labels.Cancel}" Style="{StaticResource AccentButton}"
                     Command="{Binding CancelCommand}" Visibility="{Binding IsQuesition, FallbackValue=Collapsed}"/>
 
-        </WrapPanel>
+            </WrapPanel>
 
-    </Grid>
+        </Grid>
+    </material:Card>
 </UserControl>

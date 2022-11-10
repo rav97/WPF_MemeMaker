@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MemeMakerWPF.Utility.Apps;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,10 @@ namespace MemeMakerWPF
     /// </summary>
     public partial class App : Application
     {
+        private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            AppCancellationToken.TokenSource.Cancel();
+            AppCancellationToken.TokenSource.Dispose();
+        }
     }
 }

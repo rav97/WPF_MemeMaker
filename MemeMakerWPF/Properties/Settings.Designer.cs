@@ -39,5 +39,23 @@ namespace MemeMakerWPF.Properties {
                 return ((global::System.Collections.Specialized.StringCollection)(this["ALLOWED_EXTENSIONS"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:7009")]
+        public string API_ENDPOINT_SSL {
+            get {
+                return ((string)(this["API_ENDPOINT_SSL"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:5009")]
+        public string API_ENDPOINT_RAW {
+            get {
+                return ((string)(this["API_ENDPOINT_RAW"]));
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using MemeMakerWPF.Models.API;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -29,6 +30,43 @@ namespace MemeMakerWPF.Utility.Extension
             encoder.Save(stream);
 
             return new Bitmap(stream);
+        }
+
+        public static BitmapImage GetBitmap(this TemplateRawData template)
+        {
+            ImageFormat format = ImageFormat.Png;
+            if(Path.GetExtension(template.Path).ToLower() != ".png")
+                format = ImageFormat.Jpeg;
+
+            ImageConverter imageConverter = new ImageConverter();
+            Bitmap bm = (Bitmap)imageConverter.ConvertFrom(template.ImageData);
+
+            if (bm != null && (bm.HorizontalResolution != (int)bm.HorizontalResolution ||
+                               bm.VerticalResolution != (int)bm.VerticalResolution))
+            {
+                bm.SetResolution((int)(bm.HorizontalResolution + 0.5f),
+                                 (int)(bm.VerticalResolution + 0.5f));
+            }
+
+            return bm.ToBitmapImage(format);
+        }
+
+        public static BitmapImage ToBitmapImage(this Bitmap bitmap, ImageFormat imageFormat)
+        {
+            using (var memory = new MemoryStream())
+            {
+                bitmap.Save(memory, imageFormat);
+                memory.Position = 0;
+
+                var bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memory;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                bitmapImage.Freeze();
+
+                return bitmapImage;
+            }
         }
 
         /// <summary>

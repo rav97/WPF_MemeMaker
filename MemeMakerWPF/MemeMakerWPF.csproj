@@ -61,9 +61,14 @@
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -82,15 +87,33 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\API\TemplateListItem.cs" />
+    <Compile Include="Models\API\TemplateRawData.cs" />
+    <Compile Include="Models\API\UploadImageData.cs" />
+    <Compile Include="Models\FileUploadModel.cs" />
+    <Compile Include="Utility\Apps\AppCancellationToken.cs" />
+    <Compile Include="Utility\Apps\WaitCursor.cs" />
     <Compile Include="Utility\Converters\CaptionWidthConverter.cs" />
     <Compile Include="Utility\Extension\BitmapOperations.cs" />
     <Compile Include="Utility\Controls\Dialogs.cs" />
+    <Compile Include="Utility\Managers\ApiConnection.cs" />
+    <Compile Include="Utility\Managers\ApiConsumer.cs" />
+    <Compile Include="Utility\Managers\ApiTemplateManager.cs" />
     <Compile Include="Utility\Resources\Labels.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Labels.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utility\Apps\TaskTimedExecution.cs" />
+    <Compile Include="ViewModel\SetBackgroundViewModel.cs" />
+    <Compile Include="ViewModel\UploadImageViewModel.cs" />
     <Compile Include="ViewModel\UserInterface\AppDialogViewModel.cs" />
+    <Compile Include="View\SetBackgroundView.xaml.cs">
+      <DependentUpon>SetBackgroundView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UploadImageView.xaml.cs">
+      <DependentUpon>UploadImageView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\UserInterface\DialogView.xaml.cs">
       <DependentUpon>DialogView.xaml</DependentUpon>
     </Compile>
@@ -102,6 +125,14 @@
     <Compile Include="View\UserInterface\AppDialogView.xaml.cs">
       <DependentUpon>AppDialogView.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\SetBackgroundView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UploadImageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\UserInterface\DialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
