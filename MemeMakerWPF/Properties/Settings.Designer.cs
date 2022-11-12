@@ -57,5 +57,14 @@ namespace MemeMakerWPF.Properties {
                 return ((string)(this["API_ENDPOINT_RAW"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int API_REQUEST_TIMEOUT {
+            get {
+                return ((int)(this["API_REQUEST_TIMEOUT"]));
+            }
+        }
     }
 }

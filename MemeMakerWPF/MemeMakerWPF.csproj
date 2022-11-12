@@ -96,8 +96,8 @@
     <Compile Include="Utility\Converters\CaptionWidthConverter.cs" />
     <Compile Include="Utility\Extension\BitmapOperations.cs" />
     <Compile Include="Utility\Controls\Dialogs.cs" />
-    <Compile Include="Utility\Managers\ApiConnection.cs" />
     <Compile Include="Utility\Managers\ApiConsumer.cs" />
+    <Compile Include="Utility\Managers\ApiMemeManager.cs" />
     <Compile Include="Utility\Managers\ApiTemplateManager.cs" />
     <Compile Include="Utility\Resources\Labels.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -1,4 +1,5 @@
 ﻿using MemeMakerWPF.Models.API;
+using MemeMakerWPF.Utility.Apps;
 using MemeMakerWPF.Utility.Controls;
 using MemeMakerWPF.Utility.Managers;
 using MemeMakerWPF.View;
@@ -24,18 +25,27 @@ namespace MemeMakerWPF.ViewModel
         #region [ VARIABLES ]
 
         private ImageType imageType;
+        private int? templateId;
         private ApiTemplateManager apiTemplateManager;
+        private ApiMemeManager apiMemeManager;
 
         private UploadImageData uploadImageData;
         
+        public bool Result { get; set; }
+
         #endregion
 
-        public UploadImageViewModel(ImageType type, string imagePath)
+        public UploadImageViewModel(ImageType type, string imagePath, int? templateId = null)
         {
-            imageType = type;
-            apiTemplateManager = new ApiTemplateManager();
+            using (new WaitCursor())
+            {
+                imageType = type;
+                this.templateId = templateId;
+                apiTemplateManager = new ApiTemplateManager();
+                apiMemeManager = new ApiMemeManager();
 
-            UploadImageData = new UploadImageData(null, imagePath);
+                UploadImageData = new UploadImageData(null, imagePath);
+            }
         }
 
         public override async Task ShowView()
@@ -52,16 +62,11 @@ namespace MemeMakerWPF.ViewModel
         {
             get => RelayCommand.Command(() =>
             {
-                bool result;
-
                 if (!UploadImageData.IsValid()) return;
 
-                if (imageType == ImageType.Template)
-                    result = apiTemplateManager.UploadTemplate(UploadImageData);
-                else
-                    result = false;
+                Result = UploadData();
 
-                if (result)
+                if (Result)
                     Dialogs.Close();
                 else
                     Dialogs.ShowError("Image upload failed. Try again later.");
@@ -86,6 +91,24 @@ namespace MemeMakerWPF.ViewModel
         #endregion
 
         #region [ METHODS ]
+
+        private bool UploadData()
+        {
+            try
+            {
+                using (new WaitCursor())
+                {
+                    if (imageType == ImageType.Template)
+                        return apiTemplateManager.UploadTemplate(UploadImageData);
+                    else
+                        return apiMemeManager.UploadMeme(templateId.Value, UploadImageData);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         #endregion
     }

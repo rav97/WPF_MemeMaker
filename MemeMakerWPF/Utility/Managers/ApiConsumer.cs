@@ -1,16 +1,18 @@
 ﻿using MemeMakerWPF.Models;
+using MemeMakerWPF.Utility.Apps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MemeMakerWPF.Utility.Managers
 {
     public class ApiConsumer
     {
-        public async Task<string> SendGetCommand(string apiEndpoint, IDictionary<string, string> parameters)
+        public async Task<string> SendGetCommand(string apiEndpoint, IDictionary<string, string> parameters, CancellationTokenSource tokenSource = null)
         {
             string fullUrl = apiEndpoint;
             var queryParams = new FormUrlEncodedContent(parameters ?? new Dictionary<string, string>());
@@ -22,16 +24,27 @@ namespace MemeMakerWPF.Utility.Managers
                     if (parameters.Count > 0)
                         fullUrl += $"?{queryParams.ReadAsStringAsync().Result}";
 
-                var result = await client.GetAsync(fullUrl);
+                try
+                {
+                    HttpResponseMessage result;
+                    if (tokenSource == null)
+                        result = await client.GetAsync(fullUrl);
+                    else
+                        result = await client.GetAsync(fullUrl, tokenSource.Token);
 
-                if (result.IsSuccessStatusCode)
-                    return await result.Content.ReadAsStringAsync();
-                else
+                    if (result.IsSuccessStatusCode)
+                        return await result.Content.ReadAsStringAsync();
+                    else
+                        return null;
+                }
+                catch
+                {
                     return null;
+                }
             }
         }
 
-        public async Task<string> SendPostCommand(string apiEndpoint, IDictionary<string, string> parameters)
+        public async Task<string> SendPostCommand(string apiEndpoint, IDictionary<string, string> parameters, CancellationTokenSource tokenSource = null)
         {
             string fullUrl = apiEndpoint;
             var queryParams = new FormUrlEncodedContent(parameters ?? new Dictionary<string, string>());
@@ -43,16 +56,27 @@ namespace MemeMakerWPF.Utility.Managers
                     if (parameters.Count > 0)
                         fullUrl += $"?{queryParams.ReadAsStringAsync().Result}";
 
-                var result = await client.PostAsync(fullUrl, queryParams);
+                try
+                {
+                    HttpResponseMessage result;
+                    if (tokenSource == null)
+                        result = await client.PostAsync(fullUrl, queryParams);
+                    else
+                        result = await client.PostAsync(fullUrl, queryParams, tokenSource.Token);
 
-                if (result.IsSuccessStatusCode)
-                    return await result.Content.ReadAsStringAsync();
-                else
+                    if (result.IsSuccessStatusCode)
+                        return await result.Content.ReadAsStringAsync();
+                    else
+                        return null;
+                }
+                catch
+                {
                     return null;
+                }
             }
         }
 
-        public async Task<string> SendPostFormDataCommand(string apiEndpoint, IDictionary<string, string> parameters, FileUploadModel file)
+        public async Task<string> SendPostFormDataCommand(string apiEndpoint, IDictionary<string, string> parameters, FileUploadModel file, CancellationTokenSource tokenSource = null)
         {
             string fullUrl = apiEndpoint;
             var queryParams = new FormUrlEncodedContent(parameters ?? new Dictionary<string, string>());
@@ -73,12 +97,26 @@ namespace MemeMakerWPF.Utility.Managers
                     multipartContent.Add(fileData, "image", file.FileName);
                     request.Content = multipartContent;
 
-                    var response = await httpClient.SendAsync(request);
+                    try
+                    {
+                        HttpResponseMessage response;
+                        if (tokenSource == null)
+                            response = await httpClient.SendAsync(request);
+                        else
+                            response = await httpClient.SendAsync(request, tokenSource.Token);
 
-                    if (response.IsSuccessStatusCode)
-                        return await response.Content.ReadAsStringAsync();
-                    else
+                        if (response.IsSuccessStatusCode)
+                            return await response.Content.ReadAsStringAsync();
+                        else
+                        {
+                            var what = await response.Content.ReadAsStringAsync();
+                            return null;
+                        }
+                    }
+                    catch
+                    {
                         return null;
+                    }
                 }
             }
         }

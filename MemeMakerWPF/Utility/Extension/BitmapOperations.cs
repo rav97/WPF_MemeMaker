@@ -111,10 +111,11 @@ namespace MemeMakerWPF.Utility.Extension
         /// Gets Bitmap and saves it as PNG in given location
         /// </summary>
         /// <param name="bitmap">TransformedBitmap from GetBitmapFromCanvas() method</param>
-        public static bool SavePng(Bitmap bitmap, string fileName)
+        public static string SavePng(Bitmap bitmap, string fileName)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            saveFileDialog.Filter = "Image files (*.png)|*.png";
             saveFileDialog.FileName = fileName;
 
             if (saveFileDialog.ShowDialog() == true)
@@ -122,10 +123,10 @@ namespace MemeMakerWPF.Utility.Extension
                 using (var file = File.OpenWrite(saveFileDialog.FileName))
                     bitmap.Save(file, ImageFormat.Png);
 
-                return true;
+                return saveFileDialog.FileName;
             }
 
-            return false;
+            return null;
         }
 
         /// <summary>

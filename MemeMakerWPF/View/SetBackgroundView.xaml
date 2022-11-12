@@ -63,7 +63,7 @@
 
                             <TextBox Grid.Column="0" Margin="5"
                                      material:HintAssist.Hint="Search for template"
-                                     Text="{Binding TemplateSearch}">
+                                     Text="{Binding TemplateSearch, UpdateSourceTrigger=PropertyChanged}">
 
                                 <i:Interaction.Triggers>
                                     <i:KeyTrigger Key="Return">

@@ -1,4 +1,6 @@
-﻿using MemeMakerWPF.Properties;
+﻿using MemeMakerWPF.Models.API;
+using MemeMakerWPF.Properties;
+using MemeMakerWPF.Utility.Apps;
 using MemeMakerWPF.Utility.Controls;
 using MemeMakerWPF.Utility.Extension;
 using MemeMakerWPF.Utility.Managers;
@@ -25,19 +27,16 @@ namespace MemeMakerWPF.ViewModel
 
         private int captionCount = 1, top = 0;
         private string templateName;
+        private int? usedTemplateId = null;
         private BitmapImage background;
         private Visibility manipulationBoxVisibility = Visibility.Hidden;
         private Size canvasSize, backgroundSize;
-
-        private ApiConnection apiConnection;
 
         #endregion
 
         public MainWindowViewModel()
         {
             CaptionTexts = new ObservableCollection<CaptionTextBoxViewModel>();
-
-            apiConnection = new ApiConnection();
         }
 
         protected override void OnLoadEvent(object o)
@@ -50,25 +49,16 @@ namespace MemeMakerWPF.ViewModel
 
         #region [ COMMANDS ]
 
-        public ICommand TestApi
-        {
-            get => RelayCommand.Command(() =>
-            {
-                ApiTemplateManager manager = new ApiTemplateManager();
-                var data = manager.GetTemplateById(1);
-
-                var bitmap = data.GetBitmap();
-                Background = bitmap;
-            });
-        }
-
         public ICommand RefreshSizes
         {
             get => RelayCommand.Command((Size size) =>
             {
                 if (Background != null)
                 {
-                    CalculateRatio(size);
+                    using (new WaitCursor())
+                    {
+                        CalculateRatio(size);
+                    }
                 }
             });
         }
@@ -80,11 +70,16 @@ namespace MemeMakerWPF.ViewModel
                 SetBackgroundViewModel vm = new SetBackgroundViewModel();
                 await vm.ShowView();
 
-                if (vm.Selected)
+                using (new WaitCursor())
                 {
-                    Background = vm.TemplateImage;
-                    templateName = vm.SelectedTemplateName;
-                    CalculateRatio(size);
+                    if (vm.Selected)
+                    {
+                        Background = vm.TemplateImage;
+                        templateName = vm.SelectedTemplateName;
+                        usedTemplateId = vm?.SelectedTemplate?.Id;
+                        CalculateRatio(size);
+                        InitFirstCaptions();
+                    }
                 }
             });
         }
@@ -93,13 +88,16 @@ namespace MemeMakerWPF.ViewModel
         {
             get => RelayCommand.Command(() =>
             {
-                CaptionTexts.Add(new CaptionTextBoxViewModel(captionCount, top, 15));
-                captionCount++;
+                using (new WaitCursor())
+                {
+                    CaptionTexts.Add(new CaptionTextBoxViewModel(captionCount, top, 15));
+                    captionCount++;
 
-                if (top >= CanvasSize.Height)
-                    top = (int)((CanvasSize.Height - BackgroundSize.Height) / 2) + 5;
-                else
-                    top += 50;
+                    if (top >= CanvasSize.Height)
+                        top = (int)((CanvasSize.Height - BackgroundSize.Height) / 2) + 5;
+                    else
+                        top += 50;
+                }
             });
         }
 
@@ -136,14 +134,22 @@ namespace MemeMakerWPF.ViewModel
             {
                 try
                 {
-                    CalculateRatio(canvas.RenderSize);
-                    var bitmap = BitmapOperations.GetBitmapFromCanvas(canvas);
-                    var scaled = BitmapOperations.TryScaleUpImage(bitmap, Background.Width, Background.Height);
+                    using (new WaitCursor())
+                    {
+                        CalculateRatio(canvas.RenderSize);
+                        var bitmap = BitmapOperations.GetBitmapFromCanvas(canvas);
+                        var scaled = BitmapOperations.TryScaleUpImage(bitmap, Background.Width, Background.Height);
 
-                    var saved = BitmapOperations.SavePng(scaled, $"MEME_{templateName}.png");
+                        var savedLocation = BitmapOperations.SavePng(scaled, $"MEME_{templateName}.png");
 
-                    if (saved)
-                        await Dialogs.ShowMessage("Your meme should be saved :)");
+                        if (savedLocation != null)
+                        {
+                            await Dialogs.ShowMessage("Your meme should be saved :)");
+
+                            if (usedTemplateId != null)
+                                await UploadMeme(usedTemplateId, savedLocation);
+                        }
+                    }
                 }
                 catch(Exception e)
                 {
@@ -221,8 +227,15 @@ namespace MemeMakerWPF.ViewModel
         /// </summary>
         private void LoadFirstImage()
         {
-            BitmapImage image = new BitmapImage(new Uri("pack://application:,,,/Utility/Resources/template.jpg", UriKind.Absolute));
-            Background = image;
+            try
+            {
+                BitmapImage image = new BitmapImage(new Uri("pack://application:,,,/Utility/Resources/template.jpg", UriKind.Absolute));
+                Background = image;
+            }
+            catch(Exception e)
+            {
+                Dialogs.ShowError(e.Message);
+            }
         }
 
         /// <summary>
@@ -230,12 +243,21 @@ namespace MemeMakerWPF.ViewModel
         /// </summary>
         private void InitFirstCaptions()
         {
-            if (CaptionTexts.Count == 0)
+            try
             {
-                CaptionTexts.Add(new CaptionTextBoxViewModel(captionCount, GetCalculatedTopPosition(), 0));
-                captionCount++;
-                CaptionTexts.Add(new CaptionTextBoxViewModel(captionCount, GetCalculatedBottomPosition(), 0));
-                captionCount++;
+                CaptionTexts.Clear();
+                captionCount = 1;
+                if (CaptionTexts.Count == 0)
+                {
+                    CaptionTexts.Add(new CaptionTextBoxViewModel(captionCount, GetCalculatedTopPosition(), 0));
+                    captionCount++;
+                    CaptionTexts.Add(new CaptionTextBoxViewModel(captionCount, GetCalculatedBottomPosition(), 0));
+                    captionCount++;
+                }
+            }
+            catch (Exception e)
+            {
+                Dialogs.ShowError(e.Message);
             }
         }
 
@@ -245,10 +267,17 @@ namespace MemeMakerWPF.ViewModel
         /// <returns>Canvas.Top position</returns>
         private int GetCalculatedTopPosition()
         {
-            if (CanvasSize == null || BackgroundSize == null)
-                return 0;
+            try
+            {
+                if (CanvasSize == null || BackgroundSize == null)
+                    return 0;
 
-            return (int)(CanvasSize.Height - BackgroundSize.Height) / 2;
+                return (int)(CanvasSize.Height - BackgroundSize.Height) / 2;
+            }
+            catch
+            {
+                return 20;
+            }
         }
 
         /// <summary>
@@ -257,10 +286,17 @@ namespace MemeMakerWPF.ViewModel
         /// <returns>Canvas.Top position</returns>
         private int GetCalculatedBottomPosition()
         {
-            if (CanvasSize == null || BackgroundSize == null)
-                return 100;
+            try
+            {
+                if (CanvasSize == null || BackgroundSize == null)
+                    return 100;
 
-            return GetCalculatedTopPosition() + (int)BackgroundSize.Height - 90;
+                return GetCalculatedTopPosition() + (int)BackgroundSize.Height - 90;
+            }
+            catch
+            {
+                return 50;
+            }
         }
 
         /// <summary>
@@ -268,11 +304,35 @@ namespace MemeMakerWPF.ViewModel
         /// </summary>
         private void CalculateRatio(Size actual)
         {
-            CanvasSize = new Size(actual.Width, actual.Height);
-            var ratio = Math.Min(actual.Width / Background.Width, actual.Height / Background.Height);
-            BackgroundSize = new Size(Background.Width * ratio, Background.Height * ratio);
+            try
+            {
+                CanvasSize = new Size(actual.Width, actual.Height);
+                var ratio = Math.Min(actual.Width / Background.Width, actual.Height / Background.Height);
+                BackgroundSize = new Size(Background.Width * ratio, Background.Height * ratio);
+            }
+            catch (Exception e)
+            {
+                Dialogs.ShowError(e.Message);
+            }
         }
 
+        private async Task UploadMeme(int? templateId, string location)
+        {
+            try
+            {
+                var result = await Dialogs.ShowQuestion("Would you like to share your meme with community?");
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    var vm = new UploadImageViewModel(ImageType.Meme, location, templateId);
+                    await vm.ShowView();
+                }
+            }
+            catch (Exception e)
+            {
+                Dialogs.ShowError(e.Message);
+            }
+        }
         
 
         #endregion

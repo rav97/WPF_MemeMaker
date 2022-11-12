@@ -19,5 +19,7 @@ namespace MemeMakerWPF
             AppCancellationToken.TokenSource.Cancel();
             AppCancellationToken.TokenSource.Dispose();
         }
+
+       
     }
 }

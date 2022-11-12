@@ -87,7 +87,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <material:PackIcon Kind="ImageAdd" VerticalAlignment="Center"/>
                                     <Separator Margin="2"/>
-                                    <TextBlock Text="Add image" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Select image" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
@@ -116,9 +116,9 @@
                                                 </Grid.ColumnDefinitions>
 
                                                 <TextBox
-                                                 Text="{Binding CaptionText, UpdateSourceTrigger=PropertyChanged}" 
-                                                 material:HintAssist.Hint="{Binding CaptionNumber, FallbackValue=Caption}"
-                                                 Margin="5" AcceptsReturn="True"/>
+                                                     Text="{Binding CaptionText, UpdateSourceTrigger=PropertyChanged}" 
+                                                     material:HintAssist.Hint="{Binding CaptionNumber, FallbackValue=Caption}"
+                                                     Margin="5" AcceptsReturn="True"/>
 
                                                 <WrapPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                                                     <Button Style="{StaticResource MaterialDesignFloatingActionButton}"

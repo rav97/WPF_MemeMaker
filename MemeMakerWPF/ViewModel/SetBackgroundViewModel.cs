@@ -1,6 +1,7 @@
 ﻿using MemeMakerWPF.Models;
 using MemeMakerWPF.Models.API;
 using MemeMakerWPF.Properties;
+using MemeMakerWPF.Utility.Apps;
 using MemeMakerWPF.Utility.Controls;
 using MemeMakerWPF.Utility.Extension;
 using MemeMakerWPF.Utility.Managers;
@@ -53,7 +54,10 @@ namespace MemeMakerWPF.ViewModel
 
         protected override void OnLoadEvent(object o)
         {
-            InitTemplateList();
+            using (new WaitCursor())
+            {
+                InitTemplateList();
+            }
         }
 
         #region [ COMMANDS ]
@@ -89,12 +93,15 @@ namespace MemeMakerWPF.ViewModel
         {
             get => RelayCommand.Command((string textSearch) =>
             {
-                if (string.IsNullOrWhiteSpace(textSearch))
-                    InitTemplateList();
-                else
+                using (new WaitCursor())
                 {
-                    var list = apiTemplateManager.SearchForTemplate(textSearch);
-                    FillTemplateList(list);
+                    if (string.IsNullOrWhiteSpace(textSearch))
+                        InitTemplateList();
+                    else
+                    {
+                        var list = apiTemplateManager.SearchForTemplate(textSearch);
+                        FillTemplateList(list);
+                    }
                 }
             });
         }
@@ -106,6 +113,7 @@ namespace MemeMakerWPF.ViewModel
                 var vm = new UploadImageViewModel(ImageType.Template, TemplateImage.UriSource.AbsolutePath);
                 await vm.ShowView();
 
+                IsLocalTemplate = !vm.Result;
             });
         }
 
@@ -113,13 +121,16 @@ namespace MemeMakerWPF.ViewModel
         {
             get => RelayCommand.Command(() =>
             {
-                if (!IsLocalTemplate)
+                using (new WaitCursor())
                 {
-                    if(SelectedTemplate != null)
-                        apiTemplateManager.SaveUsage(SelectedTemplate.Id);
-                }
+                    if (!IsLocalTemplate)
+                    {
+                        if (SelectedTemplate != null)
+                            apiTemplateManager.SaveUsage(SelectedTemplate.Id);
+                    }
 
-                Selected = true;
+                    Selected = true;
+                }
                 Dialogs.Close();
             });
         }
@@ -198,31 +209,52 @@ namespace MemeMakerWPF.ViewModel
 
         private void InitTemplateList()
         {
-            var list = apiTemplateManager.GetPopularTemplates(20);
-            FillTemplateList(list);
+            try
+            {
+                var list = apiTemplateManager.GetPopularTemplates(20);
+                FillTemplateList(list);
+            }
+            catch(Exception e)
+            {
+                Dialogs.ShowError(e.Message);
+            }
         }
 
         private void FillTemplateList(IEnumerable<TemplateListItem> list)
         {
-            TemplateList.Clear();
-            foreach (var e in list)
-                TemplateList.Add(e);
+            try
+            {
+                TemplateList.Clear();
+                foreach (var e in list)
+                    TemplateList.Add(e);
+            }
+            catch (Exception e)
+            {
+                Dialogs.ShowError(e.Message);
+            }
         }
 
         private void DownloadSelectedTemplate(TemplateListItem template)
         {
-            if (template != null)
+            try
             {
-                var data = apiTemplateManager.GetTemplateById(template.Id);
+                if (template != null)
+                {
+                    var data = apiTemplateManager.GetTemplateById(template.Id);
 
-                var bitmap = data.GetBitmap();
-                TemplateImage = bitmap;
-                SelectedTemplateName = Path.GetFileNameWithoutExtension(template.Path);
+                    var bitmap = data.GetBitmap();
+                    TemplateImage = bitmap;
+                    SelectedTemplateName = Path.GetFileNameWithoutExtension(template.Path);
+                }
+                else
+                {
+                    TemplateImage = null;
+                    SelectedTemplateName = null;
+                }
             }
-            else
+            catch (Exception e)
             {
-                TemplateImage = null;
-                SelectedTemplateName = null;
+                Dialogs.ShowError(e.Message);
             }
         }
 
