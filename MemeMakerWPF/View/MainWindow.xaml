@@ -63,6 +63,7 @@
                             <RowDefinition/>
                             <RowDefinition Height="10"/>
                             <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0">
@@ -121,23 +122,23 @@
                                                      Margin="5" AcceptsReturn="True"/>
 
                                                 <WrapPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                                    <Button Style="{StaticResource MaterialDesignFloatingActionButton}"
-                                                    Padding="0" Width="25" Height="25" Command="{Binding FontSizeUp}"
-                                                    ToolTip="Increase font size" Margin="3">
+                                                    <Button Style="{StaticResource FloatingPrimaryButton}"
+                                                            Padding="0" Width="25" Height="25" Command="{Binding FontSizeUp}"
+                                                            ToolTip="Increase font size" Margin="3">
                                                         <material:PackIcon Kind="FormatFontSizeIncrease"/>
                                                     </Button>
 
-                                                    <Button Style="{StaticResource MaterialDesignFloatingActionButton}"
-                                                    Padding="0" Width="25" Height="25" Command="{Binding FontSizeDown}"
-                                                    ToolTip="Decrease font size" Margin="3">
+                                                    <Button Style="{StaticResource FloatingPrimaryButton}"
+                                                            Padding="0" Width="25" Height="25" Command="{Binding FontSizeDown}"
+                                                            ToolTip="Decrease font size" Margin="3">
                                                         <material:PackIcon Kind="FormatFontSizeDecrease"/>
                                                     </Button>
 
                                                 </WrapPanel>
 
                                                 <Button Grid.Column="2" Style="{StaticResource FloatingRedButton}" Padding="0"
-                                                Width="25" Height="25" Command="{Binding ElementName=window, Path=DataContext.RemoveCaption}" CommandParameter="{Binding .}"
-                                                ToolTip="Remove caption" Margin="3">
+                                                        Width="25" Height="25" Command="{Binding ElementName=window, Path=DataContext.RemoveCaption}" CommandParameter="{Binding .}"
+                                                        ToolTip="Remove caption" Margin="3">
                                                     <material:PackIcon Kind="Remove"/>
                                                 </Button>
 
@@ -158,6 +159,15 @@
                             </StackPanel>
                         </Button>
 
+                        <Button Grid.Row="5" ToolTip="Meme gallery" Style="{StaticResource AccentButton}"
+                            Command="{Binding OpenGallery}" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <material:PackIcon Kind="Images" VerticalAlignment="Center"/>
+                                <Separator Margin="2"/>
+                                <TextBlock Text="Meme Gallery" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        
                     </Grid>
                 </Border>
 

@@ -1,0 +1,96 @@
+﻿<c:ExtendedWindow x:Class="MemeMakerWPF.View.MemesGalleryView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MemeMakerWPF.View"
+        xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:c="clr-namespace:MemeMakerWPF.Utility.Controls"
+        xmlns:convert="clr-namespace:MemeMakerWPF.Utility.Converters"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        Style="{StaticResource FullWindow}" 
+        Title="Meme Gallery" Height="800" Width="1200">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding OnLoad}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <c:WindowBeam Header="{Binding ElementName=window, Path=Title}"/>
+
+        <Grid x:Name="ContentPanel" Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition MinHeight="125" Height="auto"/>
+                    <RowDefinition Height="3*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="9*"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Style="{StaticResource FloatingAccentButton}" 
+                            Command="{Binding Left}" IsEnabled="{Binding LeftEnabled}"
+                            ToolTip="Load previous memes">
+                        <material:PackIcon Kind="ArrowLeftBold" Height="40" Width="40"/>
+                    </Button>
+
+                    <ListView Grid.Column="1" HorizontalAlignment="Center"
+                              ItemsSource="{Binding MemesList}" SelectedItem="{Binding SelectedMeme}">
+
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <Canvas Width="200" Height="112">
+                                        <Canvas.Background>
+                                            <ImageBrush ImageSource="{Binding Image}" Stretch="Uniform"/>
+                                        </Canvas.Background>
+                                    </Canvas>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+
+                    </ListView>
+
+                    <Button Grid.Column="2" Style="{StaticResource FloatingAccentButton}" 
+                            Command="{Binding Right}" IsEnabled="{Binding RightEnabled}"
+                            ToolTip="Load next memes">
+                        <material:PackIcon Kind="ArrowRightBold" Height="40" Width="40"/>
+                    </Button>
+
+                </Grid>
+
+                <Canvas Grid.Row="1">
+                    <Canvas.Background>
+                        <ImageBrush ImageSource="{Binding SelectedImage}" Stretch="Uniform"/>
+                    </Canvas.Background>
+                </Canvas>
+
+                <Button Grid.Row="1" Style="{StaticResource FloatingPrimaryButton}"
+                        HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="20"
+                        ToolTip="Download selected meme" Command="{Binding Download}" IsEnabled="{Binding DownloadEnabled}">
+                    <material:PackIcon Kind="Download" Width="40" Height="40"/>
+                </Button>
+
+            </Grid>
+        </Grid>
+    </Grid>
+
+</c:ExtendedWindow>

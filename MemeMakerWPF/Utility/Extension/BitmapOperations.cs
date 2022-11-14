@@ -32,10 +32,39 @@ namespace MemeMakerWPF.Utility.Extension
             return new Bitmap(stream);
         }
 
+        public static Bitmap ToBitmap(this BitmapImage bitmapImage)
+        {
+            MemoryStream stream = new MemoryStream();
+            BitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmapImage));
+            encoder.Save(stream);
+
+            return new Bitmap(stream);
+        }
+
         public static BitmapImage GetBitmap(this TemplateRawData template)
         {
             ImageFormat format = ImageFormat.Png;
             if(Path.GetExtension(template.Path).ToLower() != ".png")
+                format = ImageFormat.Jpeg;
+
+            ImageConverter imageConverter = new ImageConverter();
+            Bitmap bm = (Bitmap)imageConverter.ConvertFrom(template.ImageData);
+
+            if (bm != null && (bm.HorizontalResolution != (int)bm.HorizontalResolution ||
+                               bm.VerticalResolution != (int)bm.VerticalResolution))
+            {
+                bm.SetResolution((int)(bm.HorizontalResolution + 0.5f),
+                                 (int)(bm.VerticalResolution + 0.5f));
+            }
+
+            return bm.ToBitmapImage(format);
+        }
+
+        public static BitmapImage GetBitmap(this MemeRawData template)
+        {
+            ImageFormat format = ImageFormat.Png;
+            if (Path.GetExtension(template.Path).ToLower() != ".png")
                 format = ImageFormat.Jpeg;
 
             ImageConverter imageConverter = new ImageConverter();

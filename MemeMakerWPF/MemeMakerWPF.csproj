@@ -87,7 +87,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\API\MemeListItem.cs" />
     <Compile Include="Models\API\TemplateListItem.cs" />
+    <Compile Include="Models\API\MemeRawData.cs" />
     <Compile Include="Models\API\TemplateRawData.cs" />
     <Compile Include="Models\API\UploadImageData.cs" />
     <Compile Include="Models\FileUploadModel.cs" />
@@ -105,9 +107,13 @@
       <DependentUpon>Labels.resx</DependentUpon>
     </Compile>
     <Compile Include="Utility\Apps\TaskTimedExecution.cs" />
+    <Compile Include="ViewModel\MemesGalleryViewModel.cs" />
     <Compile Include="ViewModel\SetBackgroundViewModel.cs" />
     <Compile Include="ViewModel\UploadImageViewModel.cs" />
     <Compile Include="ViewModel\UserInterface\AppDialogViewModel.cs" />
+    <Compile Include="View\MemeGalleryView.xaml.cs">
+      <DependentUpon>MemeGalleryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SetBackgroundView.xaml.cs">
       <DependentUpon>SetBackgroundView.xaml</DependentUpon>
     </Compile>
@@ -125,6 +131,10 @@
     <Compile Include="View\UserInterface\AppDialogView.xaml.cs">
       <DependentUpon>AppDialogView.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\MemeGalleryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\SetBackgroundView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

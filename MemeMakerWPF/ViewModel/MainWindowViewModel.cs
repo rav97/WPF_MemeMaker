@@ -158,6 +158,15 @@ namespace MemeMakerWPF.ViewModel
             });
         }
 
+        public ICommand OpenGallery
+        {
+            get => RelayCommand.Command(() =>
+            {
+                var vm = new MemesGalleryViewModel();
+                vm.ShowView();
+            });
+        }
+
         #endregion
 
         #region [ PUBLIC ]

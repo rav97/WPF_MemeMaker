@@ -70,3 +70,5 @@ C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\obj\Debug\View\SetBackgro
 C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\obj\Debug\View\SetBackgroundView.baml
 C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\obj\Debug\View\UploadImageView.g.cs
 C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\obj\Debug\View\UploadImageView.baml
+C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\obj\Debug\View\MemeGalleryView.g.cs
+C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\obj\Debug\View\MemeGalleryView.baml

@@ -52,7 +52,7 @@ namespace MemeMakerWPF.Utility.Managers
             var cts = AppCancellationToken.LinkedTokenSource;
             cts.CancelAfter(TimeSpan.FromSeconds(Settings.Default.API_REQUEST_TIMEOUT));
 
-            var t = Task.Run(() => apiConsumer.SendGetCommand(fullEndpoint, new Dictionary<string, string> { { "phrase", name } }));
+            var t = Task.Run(() => apiConsumer.SendGetCommand(fullEndpoint, new Dictionary<string, string> { { "phrase", name } }, cts));
             t.Wait();
 
             string jsonResult = t.Result;
