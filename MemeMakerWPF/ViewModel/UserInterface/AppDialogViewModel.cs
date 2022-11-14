@@ -26,6 +26,7 @@ namespace MemeMakerWPF.ViewModel.UserInterface
 
         public AppDialogViewModel(string message, bool? question = false)
         {
+            Mouse.OverrideCursor = null;
             if(question != null)
             {
                 this.IsQuestion = question.Value ? Visibility.Visible : Visibility.Collapsed;

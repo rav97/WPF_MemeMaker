@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\obj\Debug\
+C:\Users\rafi7\source\repos\Test\WPF_MemeMaker\MemeMakerWPF\obj\Debug\
 MemeMakerWPF
 none
 false
 DEBUG;TRACE
-C:\Users\rafi7\source\repos\WPF_MemeMaker\MemeMakerWPF\App.xaml
+C:\Users\rafi7\source\repos\Test\WPF_MemeMaker\MemeMakerWPF\App.xaml
 4-1131486642
 
-18-123497370
-18309747804
+19-1572856253
+19775129435
 View\UserInterface\DialogView.xaml;View\MainWindow.xaml;Utility\Controls\WindowBeam.xaml;View\UserInterface\AppDialogView.xaml;
 
 False

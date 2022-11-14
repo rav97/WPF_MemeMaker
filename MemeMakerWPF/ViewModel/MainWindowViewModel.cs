@@ -1,4 +1,5 @@
 ﻿using MemeMakerWPF.Properties;
+using MemeMakerWPF.Utility.Apps;
 using MemeMakerWPF.Utility.Controls;
 using MemeMakerWPF.Utility.Extension;
 using Microsoft.Win32;
@@ -36,9 +37,12 @@ namespace MemeMakerWPF.ViewModel
 
         protected override void OnLoadEvent(object o)
         {
-            LoadFirstImage();
-            CalculateRatio(new Size(577.5, 388)); // this will update on image upload or window resize
-            top = (int)((CanvasSize.Height - BackgroundSize.Height) / 2) + 5;
+            using (new WaitCursor())
+            {
+                LoadFirstImage();
+                CalculateRatio(new Size(577.5, 388)); // this will update on image upload or window resize
+                top = (int)((CanvasSize.Height - BackgroundSize.Height) / 2) + 5;
+            }
         }
 
         #region [ COMMANDS ]
@@ -67,9 +71,12 @@ namespace MemeMakerWPF.ViewModel
                     {
                         if (Settings.Default.ALLOWED_EXTENSIONS.Contains(Path.GetExtension(openFileDialog.FileName)))
                         {
-                            Background = new BitmapImage(new Uri(openFileDialog.FileName));
-                            CalculateRatio(size);
-                            InitFirstCaptions();
+                            using (new WaitCursor())
+                            {
+                                Background = new BitmapImage(new Uri(openFileDialog.FileName));
+                                CalculateRatio(size);
+                                InitFirstCaptions();
+                            }
                         }
                         else
                         {
@@ -128,13 +135,16 @@ namespace MemeMakerWPF.ViewModel
             {
                 try
                 {
-                    CalculateRatio(canvas.RenderSize);
-                    var bitmap = BitmapOperations.GetBitmapFromCanvas(canvas);
-                    var scaled = BitmapOperations.TryScaleUpImage(bitmap, Background.Width, Background.Height);
-                    var saved = BitmapOperations.SavePng(scaled, $"MEME_{Path.GetFileNameWithoutExtension(Background.UriSource.ToString())}.png");
+                    using (new WaitCursor())
+                    {
+                        CalculateRatio(canvas.RenderSize);
+                        var bitmap = BitmapOperations.GetBitmapFromCanvas(canvas);
+                        var scaled = BitmapOperations.TryScaleUpImage(bitmap, Background.Width, Background.Height);
+                        var saved = BitmapOperations.SavePng(scaled, $"MEME_{Path.GetFileNameWithoutExtension(Background.UriSource.ToString())}.png");
 
-                    if (saved)
-                        await Dialogs.ShowMessage("Your meme should be saved :)");
+                        if (saved)
+                            await Dialogs.ShowMessage("Your meme should be saved :)");
+                    }
                 }
                 catch(Exception e)
                 {
@@ -221,6 +231,7 @@ namespace MemeMakerWPF.ViewModel
         /// </summary>
         private void InitFirstCaptions()
         {
+            CaptionTexts.Clear();
             if (CaptionTexts.Count == 0)
             {
                 CaptionTexts.Add(new CaptionTextBoxViewModel(captionCount, GetCalculatedTopPosition(), 0));

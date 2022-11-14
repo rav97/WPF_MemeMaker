@@ -21,6 +21,7 @@ namespace MemeMakerWPF.Utility.Controls
         {
             try
             {
+                Mouse.OverrideCursor = null;
                 var vm = new AppDialogViewModel(message);
                 await DialogHost.Show(vm.ControlView, Identifier());
             }
@@ -32,6 +33,7 @@ namespace MemeMakerWPF.Utility.Controls
         {
             try
             {
+                Mouse.OverrideCursor = null;
                 var viewModel = new AppDialogViewModel(message);
                 await DialogHost.Show(viewModel.ControlView, Identifier());
             }
@@ -45,6 +47,7 @@ namespace MemeMakerWPF.Utility.Controls
         {
             try
             {
+                Mouse.OverrideCursor = null;
                 var viewModel = new AppDialogViewModel(message, true);
                 await DialogHost.Show(viewModel.ControlView, Identifier());
                 return viewModel.Result;
