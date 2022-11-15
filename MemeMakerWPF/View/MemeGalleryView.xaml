@@ -8,7 +8,7 @@
         xmlns:c="clr-namespace:MemeMakerWPF.Utility.Controls"
         xmlns:convert="clr-namespace:MemeMakerWPF.Utility.Converters"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        mc:Ignorable="d"
+        mc:Ignorable="d" x:Name="window2"
         Style="{StaticResource FullWindow}" 
         Title="Meme Gallery" Height="800" Width="1200">
 
@@ -24,7 +24,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <c:WindowBeam Header="{Binding ElementName=window, Path=Title}"/>
+        <c:WindowBeam Header="{Binding ElementName=window2, Path=Title}"/>
 
         <Grid x:Name="ContentPanel" Grid.Row="1">
             <Grid>
