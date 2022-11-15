@@ -28,6 +28,7 @@ The apliaction was created with the use of following technologies and tools:
 - MVVM pattern
 - [MaterialDesign in XAML](http://materialdesigninxaml.net/)
 - HttpClient
+- Newtonsoft.Json
 
 ## How to run
 
