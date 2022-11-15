@@ -1,4 +1,5 @@
 ﻿using MemeMakerWPF.Models;
+using MemeMakerWPF.Properties;
 using MemeMakerWPF.Utility.Apps;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,8 @@ namespace MemeMakerWPF.Utility.Managers
                 try
                 {
                     HttpResponseMessage result;
+                    client.DefaultRequestHeaders.Add("X-Api-Key", Settings.Default.API_KEY);
+
                     if (tokenSource == null)
                         result = await client.GetAsync(fullUrl);
                     else
@@ -59,6 +62,8 @@ namespace MemeMakerWPF.Utility.Managers
                 try
                 {
                     HttpResponseMessage result;
+                    client.DefaultRequestHeaders.Add("X-Api-Key", Settings.Default.API_KEY);
+
                     if (tokenSource == null)
                         result = await client.PostAsync(fullUrl, queryParams);
                     else
@@ -87,6 +92,7 @@ namespace MemeMakerWPF.Utility.Managers
 
             using (var httpClient = new HttpClient())
             {
+                httpClient.DefaultRequestHeaders.Add("X-Api-Key", Settings.Default.API_KEY);
                 using (var request = new HttpRequestMessage(new HttpMethod("POST"), fullUrl))
                 {
                     request.Headers.TryAddWithoutValidation("accept", "*/*");
