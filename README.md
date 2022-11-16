@@ -34,7 +34,7 @@ The apliaction was created with the use of following technologies and tools:
 
 1. Clone repository
 2. Open solution in Visual Studio (I used VS2022, but older versions should be just fine)
-3. In order to connect with API you need to set URL and key to [MemeMakerAPI](https://github.com/rav97/MemeMaker_API) in `Properties/Settings.settings` file and make sure that the API is running. Otherwise APP will be a bit laggy. Also to properly send requests you need valid Api Key, that can be cenerated in [MemeMakerAPI](https://github.com/rav97/MemeMaker_API).
+3. In order to connect with API you need to set URL and ApiKey to [MemeMakerAPI](https://github.com/rav97/MemeMaker_API) in `Properties/Settings.settings` file and make sure that the API is running. Otherwise APP will be a bit laggy. Also to properly send requests you need valid Api Key, that can be generated in [MemeMakerAPI](https://github.com/rav97/MemeMaker_API).
 4. Compile project
 5. You can run app directly from Visual Studio or from .exe file created in `/bin/Debug` or `/bin/Release` folder.
 
